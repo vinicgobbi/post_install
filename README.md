@@ -2,10 +2,10 @@
 
 Script modular para configurar uma workstation Linux recém-instalada: mirrors,
 atualização do sistema, Docker, VSCode, PHP + SQL Server, Flatpaks (incluindo
-jogos — Steam, Heroic, ProtonPlus, PrismLauncher), Chrome, Bitwarden,
-temas/ícones GNOME, o ambiente do usuário (zsh, Oh My Zsh, fnm/Node, dotfiles
-pessoais), Rust (rustup, eza, topgrade), Claude Code e a extensão do VSCode
-para o Nautilus.
+jogos — Steam, Heroic, ProtonPlus, PrismLauncher), Tailscale + Trayscale,
+Chrome, Bitwarden, temas/ícones GNOME, o ambiente do usuário (zsh, Oh My Zsh,
+fnm/Node, dotfiles pessoais), Rust (rustup, eza, topgrade), Claude Code e a
+extensão do VSCode para o Nautilus.
 
 ## Sistemas suportados
 
@@ -67,15 +67,16 @@ modules/
   06_remover_libreoffice.sh # remove o LibreOffice nativo da distro
   07_flatpaks.sh            # instala a lista de apps Flatpak
   08_flatpaks_jogos.sh      # Steam, Heroic, ProtonPlus e PrismLauncher
-  09_php_extensoes.sh       # extensões PHP sqlsrv/pdo_sqlsrv via PECL
-  10_chrome_gcm.sh          # Google Chrome + Git Credential Manager
-  11_bitwarden.sh           # Bitwarden desktop nativo
-  12_temas_icones.sh        # tema adw-gtk3 e ícones Yaru
-  13_ambiente_usuario.sh    # zsh, Oh My Zsh, fnm/Node, dotfiles, gsettings
-  14_rust_tools.sh          # rustup + compilação de eza e topgrade via cargo
-  15_claude_code.sh         # instala o Claude Code (CLI da Anthropic)
-  16_vscode_nautilus.sh     # extensão "Abrir com o VSCode" no menu do Nautilus
-  17_limpeza.sh             # autoremove/clean do gerenciador de pacotes
+  09_tailscale.sh           # Tailscale + Trayscale, define o usuário como operator
+  10_php_extensoes.sh       # extensões PHP sqlsrv/pdo_sqlsrv via PECL
+  11_chrome_gcm.sh          # Google Chrome + Git Credential Manager
+  12_bitwarden.sh           # Bitwarden desktop nativo
+  13_temas_icones.sh        # tema adw-gtk3 e ícones Yaru
+  14_ambiente_usuario.sh    # zsh, Oh My Zsh, fnm/Node, dotfiles, gsettings
+  15_rust_tools.sh          # rustup + compilação de eza e topgrade via cargo
+  16_claude_code.sh         # instala o Claude Code (CLI da Anthropic)
+  17_vscode_nautilus.sh     # extensão "Abrir com o VSCode" no menu do Nautilus
+  18_limpeza.sh             # autoremove/clean do gerenciador de pacotes
 ```
 
 Cada arquivo em `modules/` define uma função (mesmo nome de antes, ex.:
