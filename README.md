@@ -2,8 +2,9 @@
 
 Script modular para configurar uma workstation Linux recém-instalada: mirrors,
 atualização do sistema, Docker, VSCode, PHP + SQL Server, Flatpaks, Chrome,
-Bitwarden, temas/ícones GNOME e o ambiente do usuário (zsh, Oh My Zsh, fnm/Node,
-dotfiles pessoais).
+Bitwarden, temas/ícones GNOME, o ambiente do usuário (zsh, Oh My Zsh, fnm/Node,
+dotfiles pessoais), Rust (rustup, eza, topgrade), Claude Code e a extensão do
+VSCode para o Nautilus.
 
 ## Sistemas suportados
 
@@ -69,7 +70,10 @@ modules/
   10_bitwarden.sh           # Bitwarden desktop nativo
   11_temas_icones.sh        # tema adw-gtk3 e ícones Yaru
   12_ambiente_usuario.sh    # zsh, Oh My Zsh, fnm/Node, dotfiles, gsettings
-  13_limpeza.sh             # autoremove/clean do gerenciador de pacotes
+  13_rust_tools.sh          # rustup + compilação de eza e topgrade via cargo
+  14_claude_code.sh         # instala o Claude Code (CLI da Anthropic)
+  15_vscode_nautilus.sh     # extensão "Abrir com o VSCode" no menu do Nautilus
+  16_limpeza.sh             # autoremove/clean do gerenciador de pacotes
 ```
 
 Cada arquivo em `modules/` define uma função (mesmo nome de antes, ex.:
