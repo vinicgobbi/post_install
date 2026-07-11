@@ -4,8 +4,8 @@ Script modular para configurar uma workstation Linux recém-instalada: mirrors,
 atualização do sistema, Docker, VSCode, PHP + SQL Server, Flatpaks (incluindo
 jogos — Steam, Heroic, ProtonPlus, PrismLauncher), Tailscale + Trayscale,
 Chrome, Bitwarden, temas/ícones GNOME, o ambiente do usuário (zsh, Oh My Zsh,
-fnm/Node, dotfiles pessoais), Rust (rustup, eza, topgrade), Claude Code e a
-extensão do VSCode para o Nautilus.
+fnm/Node, dotfiles pessoais), Rust (rustup, eza, topgrade), Claude Code,
+importação de perfis OpenVPN e a extensão do VSCode para o Nautilus.
 
 ## Sistemas suportados
 
@@ -76,7 +76,8 @@ modules/
   15_rust_tools.sh          # rustup + compilação de eza e topgrade via cargo
   16_claude_code.sh         # instala o Claude Code (CLI da Anthropic)
   17_vscode_nautilus.sh     # extensão "Abrir com o VSCode" no menu do Nautilus
-  18_limpeza.sh             # autoremove/clean do gerenciador de pacotes
+  18_ovpn.sh                # instala plugin OpenVPN e importa perfis de ~/.ovpn
+  19_limpeza.sh             # autoremove/clean do gerenciador de pacotes
 ```
 
 Cada arquivo em `modules/` define uma função (mesmo nome de antes, ex.:
@@ -113,6 +114,21 @@ módulos:
   (msodbcsql/mssql-tools) para essa combinação de distro+versão; se for `0`,
   o módulo `03_repositorios` e `04_pacotes_base` pulam essa parte com um
   aviso em vez de abortar o script inteiro.
+
+## Importação de perfis OpenVPN (`modules/18_ovpn.sh`)
+
+Antes de rodar o setup, copie os arquivos `.ovpn` para `~/.ovpn/` (no home do
+usuário escolhido no passo 2). O módulo:
+
+1. Garante que o plugin OpenVPN do NetworkManager esteja instalado (instala
+   se estiver faltando).
+2. Importa cada `.ovpn` de `~/.ovpn/*.ovpn` como uma conexão do
+   NetworkManager (reimportando do zero em reexecuções, para não duplicar).
+3. Se o arquivo declarar `dhcp-option DNS` e/ou `dhcp-option DOMAIN`
+   (domínio de busca), aplica esses valores manualmente na conexão via
+   `nmcli` — a importação automática nem sempre preenche isso.
+
+Se `~/.ovpn/` não existir ou estiver vazio, o módulo é pulado com um aviso.
 
 ## Requisitos
 
