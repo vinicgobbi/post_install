@@ -56,9 +56,10 @@ configurar_usuario() {
       echo \"file://\$PROJECTS_DIR\" >> \"\$BOOKMARKS_FILE\"
   fi
 
-  # Autostart do Solaar
+  # Autostart do Solaar (prioriza o .desktop do pacote nativo; usa o do Flatpak como alternativa)
   mkdir -p \"\$HOME/.config/autostart\"
-  cp /var/lib/flatpak/exports/share/applications/io.github.pwr_solaar.solaar.desktop \"\$HOME/.config/autostart/\" 2>/dev/null || true
+  cp /usr/share/applications/solaar.desktop \"\$HOME/.config/autostart/\" 2>/dev/null || \
+      cp /var/lib/flatpak/exports/share/applications/io.github.pwr_solaar.solaar.desktop \"\$HOME/.config/autostart/\" 2>/dev/null || true
 
   # Aplicação das configurações visuais do GNOME via gsettings
   if [[ \"$ID\" != \"ubuntu\" ]]; then

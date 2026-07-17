@@ -10,8 +10,8 @@ instalar_pacotes_base() {
         local EXTRAS="code"
         [[ "$ID" == "ubuntu" ]] && EXTRAS="code gnome-software gnome-software-plugin-flatpak"
 
-        apt-get install -y flatpak zsh git curl jq docker-ce docker-ce-cli \
-            containerd.io docker-buildx-plugin docker-compose-plugin php composer \
+        apt-get install -y flatpak zsh git curl jq \
+            docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin php composer \
             php-dev php-xml php-pear bat $EXTRAS
 
         if [[ "$MS_REPO_SUPPORTED" == "1" ]]; then

@@ -29,19 +29,32 @@ detectar_sistema() {
         OS_FAMILY="debian"
         PKG_MGR="apt-get"
         ARCH=$(dpkg --print-architecture)
-        BASE_CODENAME=${UBUNTU_CODENAME:-$VERSION_CODENAME}
-
-        if [[ "$ID" == "ubuntu" ]]; then
+        
+        # 1. Identifica se é Ubuntu ou um derivado (como o Linux Mint)
+        if [[ "$ID" == "ubuntu" || "$ID_LIKE" == *"ubuntu"* ]]; then
             DOCKER_DISTRO="ubuntu"
+
+            # 2. Descobre o codinome real do Ubuntu por trás da distro
+            if [ -f /etc/upstream-release/lsb-release ]; then
+                # O Mint guarda a base do Ubuntu aqui
+                BASE_CODENAME=$(grep "DISTRIB_CODENAME=" /etc/upstream-release/lsb-release | cut -d= -f2)
+            else
+                # Fallback para Ubuntu puro ou distros que expõem direto no os-release
+                BASE_CODENAME=${UBUNTU_CODENAME:-$VERSION_CODENAME}
+            fi
+
+            # 3. Valida e define as variáveis com base no Ubuntu encontrado
             case "$BASE_CODENAME" in
                 bionic) DISTRO_VERSION="18.04"; MS_REPO_SUPPORTED=1 ;;
                 focal)  DISTRO_VERSION="20.04"; MS_REPO_SUPPORTED=1 ;;
                 jammy)  DISTRO_VERSION="22.04"; MS_REPO_SUPPORTED=1 ;;
                 noble)  DISTRO_VERSION="24.04"; MS_REPO_SUPPORTED=1 ;;
-                *)      erro "Versão do Ubuntu ($BASE_CODENAME) não suportada pelos repositórios da Microsoft/Docker." ;;
+                *)      erro "Versão base do Ubuntu ($BASE_CODENAME) não suportada pelos repositórios da Microsoft/Docker." ;;
             esac
         else
+            # Debian puro e derivados diretos do Debian (ex: LMDE)
             DOCKER_DISTRO="debian"
+            BASE_CODENAME=${VERSION_CODENAME:-$VERSION_ID}
             case "$BASE_CODENAME" in
                 bullseye) DISTRO_VERSION="11"; MS_REPO_SUPPORTED=1 ;;
                 bookworm) DISTRO_VERSION="12"; MS_REPO_SUPPORTED=1 ;;
