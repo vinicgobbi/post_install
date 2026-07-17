@@ -3,8 +3,8 @@
 instalar_pacotes_base() {
     info "Instalando pacotes base e utilitários..."
     if [[ "$PKG_MGR" == "dnf" ]]; then
-        ACCEPT_EULA=Y dnf install -y flatpak code zsh git curl jq docker-ce docker-ce-cli \
-            containerd.io docker-buildx-plugin docker-compose-plugin php composer \
+        ACCEPT_EULA=Y dnf install -y flatpak code zsh git curl jq \
+            docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin php composer \
             php-devel php-xml php-pear msodbcsql18 mssql-tools18 unixODBC-devel bat
     else
         local EXTRAS="code"
