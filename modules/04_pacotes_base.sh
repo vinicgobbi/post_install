@@ -8,7 +8,9 @@ instalar_pacotes_base() {
             php-devel php-xml php-pear msodbcsql18 mssql-tools18 unixODBC-devel bat
     else
         local EXTRAS="code"
-        [[ "$ID" == "ubuntu" ]] && EXTRAS="code gnome-software gnome-software-plugin-flatpak"
+        # gnome-software só faz sentido em Ubuntu com GNOME; em Kubuntu (mesmo
+        # $ID) o Discover já cobre Flatpak, então evitamos puxar o GNOME Software.
+        [[ "$ID" == "ubuntu" && "$DESKTOP_ENV" != "kde" ]] && EXTRAS="code gnome-software gnome-software-plugin-flatpak"
 
         apt-get install -y flatpak zsh git curl jq \
             docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin php composer \

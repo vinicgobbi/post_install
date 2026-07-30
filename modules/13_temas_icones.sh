@@ -1,6 +1,13 @@
 #!/usr/bin/env bash
 
 configurar_temas_e_icones() {
+    # adw-gtk3 e Yaru existem só para dar cara de GNOME a apps GTK; no Plasma
+    # o padrão já é Breeze, então baixar isso aqui seria tempo/banda perdidos.
+    if [[ "$DESKTOP_ENV" == "kde" ]]; then
+        info "Ambiente Plasma detectado: pulando temas/ícones GTK (adw-gtk3/Yaru), sem uso no KDE."
+        return
+    fi
+
     info "Configurando temas e ícones globais em /usr/share..."
     mkdir -p /usr/share/themes /usr/share/icons
 
@@ -50,5 +57,5 @@ configurar_temas_e_icones() {
 }
 
 registrar_modulo "temas_icones" "Temas e ícones" \
-    "Instala o tema adw-gtk3 e os ícones Yaru" \
+    "Instala o tema adw-gtk3 e os ícones Yaru (pulado automaticamente no Plasma)" \
     "configurar_temas_e_icones"

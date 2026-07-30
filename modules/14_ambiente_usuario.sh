@@ -61,15 +61,20 @@ configurar_usuario() {
   cp /usr/share/applications/solaar.desktop \"\$HOME/.config/autostart/\" 2>/dev/null || \
       cp /var/lib/flatpak/exports/share/applications/io.github.pwr_solaar.solaar.desktop \"\$HOME/.config/autostart/\" 2>/dev/null || true
 
-  # Aplicação das configurações visuais do GNOME via gsettings
-  if [[ \"$ID\" != \"ubuntu\" ]]; then
-      gsettings set org.gnome.desktop.interface gtk-theme 'adw-gtk3-dark' && gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark' 2>/dev/null || true
+  # Aplicação das configurações visuais: GNOME via gsettings, Plasma via plasma-apply-colorscheme
+  if [[ \"$DESKTOP_ENV\" == \"kde\" ]]; then
+      command -v plasma-apply-colorscheme >/dev/null 2>&1 && plasma-apply-colorscheme BreezeDark >/dev/null 2>&1
+      true
+  else
+      if [[ \"$ID\" != \"ubuntu\" ]]; then
+          gsettings set org.gnome.desktop.interface gtk-theme 'adw-gtk3-dark' && gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark' 2>/dev/null || true
+      fi
+      gsettings set org.gnome.desktop.interface icon-theme \"Yaru-dark\" 2>/dev/null || true
   fi
-  gsettings set org.gnome.desktop.interface icon-theme \"Yaru-dark\" 2>/dev/null || true
 "
     sucesso "Ambiente de usuário configurado."
 }
 
 registrar_modulo "ambiente_usuario" "Configurar ambiente do usuário" \
-    "Zsh, Oh My Zsh, fnm/Node, dotfiles e ajustes visuais do GNOME" \
+    "Zsh, Oh My Zsh, fnm/Node, dotfiles e ajustes visuais (GNOME ou Plasma, conforme detectado)" \
     "configurar_usuario"

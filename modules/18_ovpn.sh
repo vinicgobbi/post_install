@@ -3,10 +3,21 @@
 importar_ovpn() {
     info "Importando perfis OpenVPN para o NetworkManager..."
 
+    # O pacote "-gnome" só traz o diálogo de autenticação GTK usado pelo
+    # nm-applet/Configurações do GNOME; no Plasma quem cobre isso é o próprio
+    # plasma-nm, então evitamos puxar dependências GTK à toa.
     if [[ "$PKG_MGR" == "dnf" ]]; then
-        rpm -q NetworkManager-openvpn &>/dev/null || dnf install -y NetworkManager-openvpn NetworkManager-openvpn-gnome
+        if [[ "$DESKTOP_ENV" == "kde" ]]; then
+            rpm -q NetworkManager-openvpn &>/dev/null || dnf install -y NetworkManager-openvpn
+        else
+            rpm -q NetworkManager-openvpn &>/dev/null || dnf install -y NetworkManager-openvpn NetworkManager-openvpn-gnome
+        fi
     else
-        dpkg -s network-manager-openvpn &>/dev/null || apt-get install -y network-manager-openvpn network-manager-openvpn-gnome
+        if [[ "$DESKTOP_ENV" == "kde" ]]; then
+            dpkg -s network-manager-openvpn &>/dev/null || apt-get install -y network-manager-openvpn
+        else
+            dpkg -s network-manager-openvpn &>/dev/null || apt-get install -y network-manager-openvpn network-manager-openvpn-gnome
+        fi
     fi
 
     local user_home ovpn_dir
