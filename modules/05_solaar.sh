@@ -5,10 +5,10 @@ instalar_solaar() {
     info "Instalando Solaar..."
 
     # Em Ubuntu (e derivados), a PPA solaar-unifying/stable já traz o Solaar
-    # sempre atualizado e instala as regras UDEV automaticamente no postinst,
-    # poupando o download manual do arquivo de regras.
+    # sempre atualizado. As regras UDEV são baixadas à parte em configurar_solaar,
+    # independente da origem da instalação.
     if [[ "$via_ppa" == "1" ]]; then
-        info "Sistema baseado em Ubuntu: usando a PPA solaar-unifying/stable (já traz as regras UDEV)."
+        info "Sistema baseado em Ubuntu: usando a PPA solaar-unifying/stable."
         comando_existe add-apt-repository || apt-get install -y software-properties-common
         add-apt-repository -y ppa:solaar-unifying/stable
         apt-get update
@@ -44,12 +44,8 @@ configurar_solaar() {
     getent group plugdev >/dev/null || groupadd plugdev
     usermod -aG plugdev "$USER_NAME"
 
-    if [[ "$via_ppa" == "1" ]]; then
-        info "Regras UDEV já instaladas pela PPA solaar-unifying; só recarregando o udev."
-    else
-        info "Configurando regras UDEV para o Solaar..."
-        curl -sL https://raw.githubusercontent.com/pwr-Solaar/Solaar/master/rules.d-uinput/42-logitech-unify-permissions.rules -o /etc/udev/rules.d/42-logitech-unify-permissions.rules
-    fi
+    info "Configurando regras UDEV para o Solaar..."
+    curl -sL https://raw.githubusercontent.com/pwr-Solaar/Solaar/master/rules.d-uinput/42-logitech-unify-permissions.rules -o /etc/udev/rules.d/42-logitech-unify-permissions.rules
 
     udevadm control --reload-rules
     udevadm trigger --subsystem-match=usb
