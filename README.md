@@ -122,9 +122,16 @@ módulos:
 No Ubuntu (`$ID == "ubuntu"`, não em Mint/outros derivados), os seguintes
 apps são instalados via Snap em vez de Flatpak/apt, porque o snapd já vem
 pronto de fábrica no Ubuntu: **Obsidian, Postman, DBeaver CE, LibreOffice,
-OnlyOffice, VLC, Remmina, Steam, Heroic, VSCode e Bitwarden**. A lista com o
-mapeamento (id do Flatpak/pacote apt → pacote Snap) fica em `SNAP_MIGRACAO`,
-em `config.sh`.
+OnlyOffice, VLC, Remmina, Steam, VSCode e Bitwarden**. A lista com o
+mapeamento (id do Flatpak/pacote apt → pacote Snap, e se precisa de
+`--classic`) fica em `SNAP_MIGRACAO`, em `config.sh` — os confinamentos
+(`classic`/`strict`) foram conferidos na API oficial da Snap Store
+(`api.snapcraft.io`), não chutados.
+
+Heroic Games Launcher **não migrou**: não existe snap oficial dele (nem
+`heroic`, nem variações do nome) na Snap Store, então continua instalado via
+Flatpak (`com.heroicgameslauncher.hgl`) em todas as distros, inclusive
+Ubuntu.
 
 Para isso, os módulos `07_flatpaks`, `08_flatpaks_jogos`, `12_bitwarden`,
 `04_pacotes_base` e `03_repositorios` pulam esses apps especificamente no

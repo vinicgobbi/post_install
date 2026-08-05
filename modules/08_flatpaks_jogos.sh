@@ -6,7 +6,7 @@ instalar_flatpaks_jogos() {
     local apps=("${FLATPAKS_JOGOS[@]}")
     filtrar_flatpaks_migrados_snap apps
     if [[ "$ID" == "ubuntu" ]]; then
-        aviso "No Ubuntu, Steam e Heroic são instalados via Snap (módulo 'Instalar apps via Snap'), não aqui."
+        aviso "No Ubuntu, o Steam é instalado via Snap (módulo 'Instalar apps via Snap'); Heroic continua via Flatpak (sem snap oficial)."
     fi
 
     flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo

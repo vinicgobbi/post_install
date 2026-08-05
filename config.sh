@@ -69,14 +69,16 @@ FLATPAKS_JOGOS=(
 # modules/19_snap_apps.sh e pelo script migrar_para_snap.sh.
 SNAP_MIGRACAO=(
     "Obsidian|flatpak|md.obsidian.Obsidian|obsidian|classic"
-    "Postman|flatpak|com.getpostman.Postman|postman|classic"
-    "DBeaver CE|flatpak|io.dbeaver.DBeaverCommunity|dbeaver-ce|"
+    "Postman|flatpak|com.getpostman.Postman|postman|"
+    "DBeaver CE|flatpak|io.dbeaver.DBeaverCommunity|dbeaver-ce|classic"
     "LibreOffice|flatpak|org.libreoffice.LibreOffice|libreoffice|"
     "OnlyOffice|flatpak|org.onlyoffice.desktopeditors|onlyoffice-desktopeditors|"
     "VLC|flatpak|org.videolan.VLC|vlc|"
     "Remmina|flatpak|org.remmina.Remmina|remmina|"
     "Steam|flatpak|com.valvesoftware.Steam|steam|"
-    "Heroic Games Launcher|flatpak|com.heroicgameslauncher.hgl|heroic|classic"
     "Visual Studio Code|apt|code|code|classic"
     "Bitwarden|apt|bitwarden|bitwarden|"
 )
+# Heroic Games Launcher ficou de fora: não existe snap oficial (nem
+# "heroic", "heroic-games-launcher" ou variações) na Snap Store — continua
+# instalado via Flatpak (com.heroicgameslauncher.hgl) em todas as distros.
