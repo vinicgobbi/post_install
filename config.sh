@@ -51,3 +51,32 @@ FLATPAKS_JOGOS=(
   com.heroicgameslauncher.hgl com.valvesoftware.Steam
   com.vysp3r.ProtonPlus org.prismlauncher.PrismLauncher
 )
+
+# ==========================================
+# Migração para Snap (só no Ubuntu, $ID == "ubuntu")
+# ==========================================
+# Apps que, especificamente no Ubuntu, instalamos via Snap em vez de
+# Flatpak/apt/deb. Fora do Ubuntu (Debian, Mint, etc.) essa lista é ignorada
+# e os módulos seguem instalando via Flatpak/apt normalmente.
+#
+# Formato de cada entrada, separado por "|":
+#   título | tipo_origem | valor_origem | pacote_snap | classic
+#   - tipo_origem:  "flatpak" ou "apt" (como o app é instalado hoje)
+#   - valor_origem: id do Flatpak, ou nome do pacote apt/dpkg
+#   - classic:      "classic" se o snap precisa de --classic, vazio se não
+#
+# Usada por lib/utils.sh (filtrar_flatpaks_migrados_snap), pelo módulo
+# modules/19_snap_apps.sh e pelo script migrar_para_snap.sh.
+SNAP_MIGRACAO=(
+    "Obsidian|flatpak|md.obsidian.Obsidian|obsidian|classic"
+    "Postman|flatpak|com.getpostman.Postman|postman|classic"
+    "DBeaver CE|flatpak|io.dbeaver.DBeaverCommunity|dbeaver-ce|"
+    "LibreOffice|flatpak|org.libreoffice.LibreOffice|libreoffice|"
+    "OnlyOffice|flatpak|org.onlyoffice.desktopeditors|onlyoffice-desktopeditors|"
+    "VLC|flatpak|org.videolan.VLC|vlc|"
+    "Remmina|flatpak|org.remmina.Remmina|remmina|"
+    "Steam|flatpak|com.valvesoftware.Steam|steam|"
+    "Heroic Games Launcher|flatpak|com.heroicgameslauncher.hgl|heroic|classic"
+    "Visual Studio Code|apt|code|code|classic"
+    "Bitwarden|apt|bitwarden|bitwarden|"
+)

@@ -39,3 +39,26 @@ download_com_retry() {
     done
     erro "Não foi possível baixar $url após $tentativas tentativas."
 }
+
+# Remove do array de Flatpaks (passado por referência, ex.: FLATPAKS,
+# FLATPAKS_JOGOS) os ids que foram migrados para Snap no Ubuntu — ver
+# SNAP_MIGRACAO em config.sh. Fora do Ubuntu ($ID != "ubuntu") não faz nada,
+# então a mesma lista de Flatpaks continua valendo normalmente.
+filtrar_flatpaks_migrados_snap() {
+    local -n _arr="$1"
+    [[ "$ID" != "ubuntu" ]] && return 0
+
+    local pkg entrada tipo valor migrado resultado=()
+    for pkg in "${_arr[@]}"; do
+        migrado=0
+        for entrada in "${SNAP_MIGRACAO[@]}"; do
+            IFS='|' read -r _ tipo valor _ _ <<< "$entrada"
+            if [[ "$tipo" == "flatpak" && "$valor" == "$pkg" ]]; then
+                migrado=1
+                break
+            fi
+        done
+        [[ "$migrado" -eq 0 ]] && resultado+=("$pkg")
+    done
+    _arr=("${resultado[@]}")
+}

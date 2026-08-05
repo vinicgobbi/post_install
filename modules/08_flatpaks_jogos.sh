@@ -2,8 +2,17 @@
 
 instalar_flatpaks_jogos() {
     info "Instalando Flatpaks de jogos..."
+
+    local apps=("${FLATPAKS_JOGOS[@]}")
+    filtrar_flatpaks_migrados_snap apps
+    if [[ "$ID" == "ubuntu" ]]; then
+        aviso "No Ubuntu, Steam e Heroic são instalados via Snap (módulo 'Instalar apps via Snap'), não aqui."
+    fi
+
     flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-    flatpak install -y flathub "${FLATPAKS_JOGOS[@]}"
+    if [[ "${#apps[@]}" -gt 0 ]]; then
+        flatpak install -y flathub "${apps[@]}"
+    fi
     sucesso "Flatpaks de jogos instalados."
 }
 

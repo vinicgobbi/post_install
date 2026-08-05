@@ -77,7 +77,9 @@ modules/
   16_claude_code.sh         # instala o Claude Code (CLI da Anthropic)
   17_vscode_nautilus.sh     # extensão "Abrir com o VSCode" no menu do Nautilus
   18_ovpn.sh                # instala plugin OpenVPN e importa perfis de ~/.ovpn
-  19_limpeza.sh             # autoremove/clean do gerenciador de pacotes
+  19_snap_apps.sh           # instala apps via Snap (só Ubuntu, ver seção abaixo)
+  20_limpeza.sh             # autoremove/clean do gerenciador de pacotes
+migrar_para_snap.sh          # script à parte: migra apps já instalados para Snap
 ```
 
 Cada arquivo em `modules/` define uma função (mesmo nome de antes, ex.:
@@ -114,6 +116,46 @@ módulos:
   (msodbcsql/mssql-tools) para essa combinação de distro+versão; se for `0`,
   o módulo `03_repositorios` e `04_pacotes_base` pulam essa parte com um
   aviso em vez de abortar o script inteiro.
+
+## Apps via Snap no Ubuntu (`modules/19_snap_apps.sh`)
+
+No Ubuntu (`$ID == "ubuntu"`, não em Mint/outros derivados), os seguintes
+apps são instalados via Snap em vez de Flatpak/apt, porque o snapd já vem
+pronto de fábrica no Ubuntu: **Obsidian, Postman, DBeaver CE, LibreOffice,
+OnlyOffice, VLC, Remmina, Steam, Heroic, VSCode e Bitwarden**. A lista com o
+mapeamento (id do Flatpak/pacote apt → pacote Snap) fica em `SNAP_MIGRACAO`,
+em `config.sh`.
+
+Para isso, os módulos `07_flatpaks`, `08_flatpaks_jogos`, `12_bitwarden`,
+`04_pacotes_base` e `03_repositorios` pulam esses apps especificamente no
+Ubuntu (usando `filtrar_flatpaks_migrados_snap` de `lib/utils.sh`), e
+`19_snap_apps` instala a versão Snap de cada um. Em qualquer outra distro
+(Debian, Mint, Fedora, RHEL) nada muda — todos continuam instalados como
+antes (Flatpak/apt).
+
+Se quiser adicionar/remover apps dessa migração, edite apenas o array
+`SNAP_MIGRACAO` em `config.sh`.
+
+## Migrando um sistema já instalado para Snap (`migrar_para_snap.sh`)
+
+Script separado do `setup.sh`, pensado para uma máquina que **já tem** essas
+apps instaladas em Flatpak/apt e você quer trocar para Snap sem reinstalar
+tudo do zero:
+
+```bash
+sudo ./migrar_para_snap.sh
+```
+
+O fluxo:
+
+1. Confirma que o sistema é Ubuntu (aborta em qualquer outra distro).
+2. Abre o mesmo menu de checklist do `setup.sh`, listando os apps de
+   `SNAP_MIGRACAO` — **você escolhe quais migrar, não precisa ser todos**.
+3. Para cada app escolhido: desinstala a versão atual (Flatpak ou apt/deb,
+   só se estiver de fato instalada) e instala a versão em Snap no lugar.
+4. Não apaga dados de apps Flatpak (`~/.var/app/<id>/`) — eles só não são
+   aproveitados automaticamente pelo Snap, então configurações/logins de
+   apps migrados podem precisar ser refeitos.
 
 ## Importação de perfis OpenVPN (`modules/18_ovpn.sh`)
 

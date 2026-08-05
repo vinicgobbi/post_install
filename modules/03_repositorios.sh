@@ -51,8 +51,14 @@ EOF
             aviso "Sem repositório oficial da Microsoft para ${DOCKER_DISTRO} ${DISTRO_VERSION}: msodbcsql/mssql-tools serão pulados mais adiante."
         fi
 
-        curl -fSsL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor | tee /etc/apt/keyrings/packages.microsoft.gpg > /dev/null
-        echo "deb [arch=amd64,arm64,armhf signed-by=/etc/apt/keyrings/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" | tee /etc/apt/sources.list.d/vscode.list > /dev/null
+        if [[ "$ID" == "ubuntu" ]]; then
+            # No Ubuntu o VSCode vem via Snap (módulo "Instalar apps via
+            # Snap"), então nem adicionamos o repositório apt dele aqui.
+            aviso "No Ubuntu, o repositório apt do VSCode é pulado (instalado via Snap)."
+        else
+            curl -fSsL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor | tee /etc/apt/keyrings/packages.microsoft.gpg > /dev/null
+            echo "deb [arch=amd64,arm64,armhf signed-by=/etc/apt/keyrings/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" | tee /etc/apt/sources.list.d/vscode.list > /dev/null
+        fi
 
         apt update
     fi
