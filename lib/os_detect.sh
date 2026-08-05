@@ -49,7 +49,15 @@ detectar_sistema() {
                 focal)  DISTRO_VERSION="20.04"; MS_REPO_SUPPORTED=1 ;;
                 jammy)  DISTRO_VERSION="22.04"; MS_REPO_SUPPORTED=1 ;;
                 noble)  DISTRO_VERSION="24.04"; MS_REPO_SUPPORTED=1 ;;
-                *)      erro "Versão base do Ubuntu ($BASE_CODENAME) não suportada pelos repositórios da Microsoft/Docker." ;;
+                *)
+                    # Versão do Ubuntu ainda sem repositório oficial "prod.repo"
+                    # publicado pela Microsoft (ex.: a LTS mais recente, recém-lançada).
+                    # Os pacotes msodbcsql/mssql-tools da última LTS suportada são
+                    # compatíveis na prática, então usamos o repositório dela como fallback.
+                    DISTRO_VERSION="24.04"
+                    MS_REPO_SUPPORTED=1
+                    aviso "Ubuntu $BASE_CODENAME ainda não tem repositório oficial da Microsoft; usando o repositório do Ubuntu 24.04 (compatível) para msodbcsql/mssql-tools."
+                    ;;
             esac
         else
             # Debian puro e derivados diretos do Debian (ex: LMDE)

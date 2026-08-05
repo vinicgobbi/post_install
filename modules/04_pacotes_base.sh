@@ -10,7 +10,7 @@ instalar_pacotes_base() {
         local EXTRAS="code"
         # gnome-software só faz sentido em Ubuntu com GNOME; em Kubuntu (mesmo
         # $ID) o Discover já cobre Flatpak, então evitamos puxar o GNOME Software.
-        [[ "$ID" == "ubuntu" && "$DESKTOP_ENV" != "kde" ]] && EXTRAS="code gnome-software gnome-software-plugin-flatpak"
+        [[ "$ID" == "ubuntu" && "$DESKTOP_ENV" != "kde" ]] && EXTRAS="code gnome-software gnome-software-plugin-flatpak gnome-software-plugin-snap"
 
         apt install -y flatpak zsh git curl jq \
             docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin php composer \
