@@ -4,7 +4,7 @@
 # ==========================================
 # Define, ao final de detectar_sistema:
 #   OS_FAMILY        fedora | rhel | debian
-#   PKG_MGR          dnf | apt-get
+#   PKG_MGR          dnf | apt
 #   ID / PRETTY_NAME vindos de /etc/os-release
 #   RHEL_VERSION     (só família rhel)
 #   ARCH             (só família debian) dpkg --print-architecture
@@ -27,7 +27,7 @@ detectar_sistema() {
 
     elif [[ "$ID" == "ubuntu" || "$ID" == "debian" || "$ID_LIKE" == *"ubuntu"* || "$ID_LIKE" == *"debian"* ]]; then
         OS_FAMILY="debian"
-        PKG_MGR="apt-get"
+        PKG_MGR="apt"
         ARCH=$(dpkg --print-architecture)
         
         # 1. Identifica se é Ubuntu ou um derivado (como o Linux Mint)

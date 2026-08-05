@@ -14,10 +14,10 @@ instalar_chrome_e_gcm() {
     else
         GCM_URL=$(curl -sL https://api.github.com/repos/git-ecosystem/git-credential-manager/releases/latest | jq -r '.assets[] | select(.name | endswith(".deb") and contains("linux-x64")) | .browser_download_url' | head -n 1)
         curl -sSL -o /tmp/gcm.deb "$GCM_URL"
-        apt-get install -y /tmp/gcm.deb
+        apt install -y /tmp/gcm.deb
 
         curl -sSL -o /tmp/chrome.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-        apt-get install -y /tmp/chrome.deb
+        apt install -y /tmp/chrome.deb
     fi
     sucesso "Chrome e GCM instalados."
 }

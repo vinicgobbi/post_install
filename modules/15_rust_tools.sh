@@ -6,7 +6,7 @@ instalar_rust_tools() {
     if [[ "$PKG_MGR" == "dnf" ]]; then
         dnf install -y gcc make
     else
-        apt-get install -y build-essential
+        apt install -y build-essential
     fi
 
     executar_como_usuario "

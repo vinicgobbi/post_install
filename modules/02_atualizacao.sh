@@ -5,7 +5,7 @@ atualizar_sistema() {
     if [[ "$PKG_MGR" == "dnf" ]]; then
         dnf upgrade --refresh -y
     else
-        apt-get update && apt-get upgrade -y
+        apt update && apt upgrade -y
     fi
     sucesso "Sistema atualizado."
 }

@@ -23,7 +23,7 @@ configurar_temas_e_icones() {
 
         if [[ -n "$ADW_PKG" ]]; then
             info "Instalando adw-gtk3 via gerenciador de pacotes nativo..."
-            if [[ "$PKG_MGR" == "dnf" ]]; then dnf install -y "$ADW_PKG"; else apt-get install -y "$ADW_PKG"; fi
+            if [[ "$PKG_MGR" == "dnf" ]]; then dnf install -y "$ADW_PKG"; else apt install -y "$ADW_PKG"; fi
         else
             info "adw-gtk3 ausente dos repositórios. Baixando tarball oficial do GitHub..."
             local ADW_URL
@@ -45,7 +45,7 @@ configurar_temas_e_icones() {
 
     if [[ -n "$YARU_PKG" ]]; then
         info "Instalando ícones Yaru via gerenciador de pacotes nativo..."
-        if [[ "$PKG_MGR" == "dnf" ]]; then dnf install -y "$YARU_PKG"; else apt-get install -y "$YARU_PKG"; fi
+        if [[ "$PKG_MGR" == "dnf" ]]; then dnf install -y "$YARU_PKG"; else apt install -y "$YARU_PKG"; fi
     else
         info "Ícones Yaru ausentes dos repositórios. Baixando do repositório oficial do Ubuntu..."
         mkdir -p /tmp/yaru-icons

@@ -30,7 +30,7 @@ EOF
     if [[ "$PKG_MGR" == "dnf" ]]; then
         dnf install -y nautilus-python python3-gobject
     else
-        apt-get install -y python3-nautilus python3-gi
+        apt install -y python3-nautilus python3-gi
     fi
 
     executar_como_usuario "

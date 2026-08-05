@@ -6,8 +6,8 @@ limpeza_final() {
         dnf autoremove -y
         dnf clean all
     else
-        apt-get autoremove -y
-        apt-get clean
+        apt autoremove -y
+        apt clean
     fi
     rm -rf /tmp/* 2>/dev/null || true
     sucesso "Instalação finalizada com sucesso!"

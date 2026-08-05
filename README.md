@@ -13,8 +13,8 @@ importação de perfis OpenVPN e a extensão do VSCode para o Nautilus.
 |----------|-----------------------------------------|-------------|
 | Fedora   | Fedora Linux                            | `dnf`       |
 | RHEL     | AlmaLinux e derivados (`ID_LIKE=rhel/centos`) | `dnf` |
-| Debian   | Ubuntu (bionic, focal, jammy, noble)     | `apt-get`   |
-| Debian   | Debian (bullseye, bookworm)              | `apt-get`   |
+| Debian   | Ubuntu (bionic, focal, jammy, noble)     | `apt`       |
+| Debian   | Debian (bullseye, bookworm)              | `apt`       |
 
 Se a distribuição/versão não estiver nessa lista, o script para com uma
 mensagem clara em vez de continuar em um estado incerto.
@@ -105,7 +105,7 @@ etapas, só criar ou apagar o arquivo em `modules/`.
 módulos:
 
 - `OS_FAMILY` — `fedora`, `rhel` ou `debian`
-- `PKG_MGR` — `dnf` ou `apt-get`
+- `PKG_MGR` — `dnf` ou `apt`
 - `RHEL_VERSION` — só para família `rhel` (ex.: `9`)
 - `ARCH`, `BASE_CODENAME`, `DISTRO_VERSION` — só para família `debian`
 - `DOCKER_DISTRO` — `ubuntu` ou `debian`, usado para montar as URLs corretas

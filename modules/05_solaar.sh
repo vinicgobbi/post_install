@@ -9,10 +9,10 @@ instalar_solaar() {
     # independente da origem da instalação.
     if [[ "$via_ppa" == "1" ]]; then
         info "Sistema baseado em Ubuntu: usando a PPA solaar-unifying/stable."
-        comando_existe add-apt-repository || apt-get install -y software-properties-common
+        comando_existe add-apt-repository || apt install -y software-properties-common
         add-apt-repository -y ppa:solaar-unifying/stable
-        apt-get update
-        apt-get install -y solaar
+        apt update
+        apt install -y solaar
         sucesso "Solaar instalado via PPA solaar-unifying/stable."
         return
     fi
@@ -37,7 +37,7 @@ instalar_solaar() {
 
 configurar_solaar() {
     local via_ppa=0
-    [[ "$PKG_MGR" == "apt-get" && "$DOCKER_DISTRO" == "ubuntu" ]] && via_ppa=1
+    [[ "$PKG_MGR" == "apt" && "$DOCKER_DISTRO" == "ubuntu" ]] && via_ppa=1
 
     instalar_solaar "$via_ppa"
 

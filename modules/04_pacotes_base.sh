@@ -12,12 +12,12 @@ instalar_pacotes_base() {
         # $ID) o Discover já cobre Flatpak, então evitamos puxar o GNOME Software.
         [[ "$ID" == "ubuntu" && "$DESKTOP_ENV" != "kde" ]] && EXTRAS="code gnome-software gnome-software-plugin-flatpak"
 
-        apt-get install -y flatpak zsh git curl jq \
+        apt install -y flatpak zsh git curl jq \
             docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin php composer \
             php-dev php-xml php-pear bat $EXTRAS
 
         if [[ "$MS_REPO_SUPPORTED" == "1" ]]; then
-            ACCEPT_EULA=Y apt-get install -y msodbcsql18 mssql-tools18 unixodbc-dev
+            ACCEPT_EULA=Y apt install -y msodbcsql18 mssql-tools18 unixodbc-dev
         else
             aviso "Pulando msodbcsql18/mssql-tools18 (sem repositório oficial da Microsoft para esta distro/versão)."
         fi

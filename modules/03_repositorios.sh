@@ -30,7 +30,7 @@ EOF
 
     else
         install -m 0755 -d /etc/apt/keyrings
-        apt-get install -y ca-certificates curl gnupg ufw gufw
+        apt install -y ca-certificates curl gnupg ufw gufw
 
         curl -fsSL "https://download.docker.com/linux/${DOCKER_DISTRO}/gpg" -o /etc/apt/keyrings/docker.asc
         chmod a+r /etc/apt/keyrings/docker.asc
@@ -53,6 +53,8 @@ EOF
 
         curl -fSsL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor | tee /etc/apt/keyrings/packages.microsoft.gpg > /dev/null
         echo "deb [arch=amd64,arm64,armhf signed-by=/etc/apt/keyrings/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" | tee /etc/apt/sources.list.d/vscode.list > /dev/null
+
+        apt update
     fi
     sucesso "Repositórios configurados."
 }

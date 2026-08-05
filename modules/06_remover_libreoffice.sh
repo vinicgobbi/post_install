@@ -5,7 +5,7 @@ remover_libreoffice_nativo() {
     if [[ "$PKG_MGR" == "dnf" ]]; then
         dnf remove -y libreoffice*
     else
-        apt-get remove --purge -y libreoffice*
+        apt remove --purge -y libreoffice*
     fi
     sucesso "LibreOffice nativo removido."
 }

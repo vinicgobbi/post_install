@@ -14,9 +14,9 @@ importar_ovpn() {
         fi
     else
         if [[ "$DESKTOP_ENV" == "kde" ]]; then
-            dpkg -s network-manager-openvpn &>/dev/null || apt-get install -y network-manager-openvpn
+            dpkg -s network-manager-openvpn &>/dev/null || apt install -y network-manager-openvpn
         else
-            dpkg -s network-manager-openvpn &>/dev/null || apt-get install -y network-manager-openvpn network-manager-openvpn-gnome
+            dpkg -s network-manager-openvpn &>/dev/null || apt install -y network-manager-openvpn network-manager-openvpn-gnome
         fi
     fi
 

@@ -7,7 +7,7 @@ instalar_bitwarden_nativo() {
         dnf install -y /tmp/bitwarden.rpm
     else
         curl -sSL -o /tmp/bitwarden.deb "https://vault.bitwarden.com/download/?app=desktop&platform=linux&variant=deb"
-        apt-get install -y /tmp/bitwarden.deb
+        apt install -y /tmp/bitwarden.deb
     fi
     sucesso "Bitwarden instalado nativamente."
 }
