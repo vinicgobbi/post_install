@@ -78,7 +78,8 @@ modules/
   17_vscode_nautilus.sh     # extensão "Abrir com o VSCode" no menu do Nautilus
   18_ovpn.sh                # instala plugin OpenVPN e importa perfis de ~/.ovpn
   19_snap_apps.sh           # instala apps via Snap (só Ubuntu, ver seção abaixo)
-  20_limpeza.sh             # autoremove/clean do gerenciador de pacotes
+  20_virt_manager.sh        # QEMU/KVM, libvirt e virt-manager (módulo à parte — desmarque no menu se não quiser)
+  21_limpeza.sh             # autoremove/clean do gerenciador de pacotes
 migrar_para_snap.sh          # script à parte: migra apps já instalados para Snap
 ```
 
