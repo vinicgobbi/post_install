@@ -122,7 +122,8 @@ módulos:
 No Ubuntu (`$ID == "ubuntu"`, não em Mint/outros derivados), os seguintes
 apps são instalados via Snap em vez de Flatpak/apt, porque o snapd já vem
 pronto de fábrica no Ubuntu: **Obsidian, Postman, DBeaver CE, LibreOffice,
-OnlyOffice, VLC, Remmina, Steam, VSCode e Bitwarden**. A lista com o
+OnlyOffice, VLC, Steam, VSCode e Bitwarden**. Remmina fica de fora por
+escolha — continua via Flatpak em todas as distros. A lista com o
 mapeamento (id do Flatpak/pacote apt → pacote Snap, e se precisa de
 `--classic`) fica em `SNAP_MIGRACAO`, em `config.sh` — os confinamentos
 (`classic`/`strict`) foram conferidos na API oficial da Snap Store

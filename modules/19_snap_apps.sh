@@ -22,5 +22,5 @@ instalar_apps_snap() {
 }
 
 registrar_modulo "snap_apps" "Instalar apps via Snap (Ubuntu)" \
-    "Obsidian, Postman, DBeaver, LibreOffice, OnlyOffice, VLC, Remmina, Steam, VSCode e Bitwarden via Snap. Só roda no Ubuntu." \
+    "Obsidian, Postman, DBeaver, LibreOffice, OnlyOffice, VLC, Steam, VSCode e Bitwarden via Snap. Só roda no Ubuntu." \
     "instalar_apps_snap"

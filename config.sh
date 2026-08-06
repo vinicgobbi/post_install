@@ -74,7 +74,6 @@ SNAP_MIGRACAO=(
     "LibreOffice|flatpak|org.libreoffice.LibreOffice|libreoffice|"
     "OnlyOffice|flatpak|org.onlyoffice.desktopeditors|onlyoffice-desktopeditors|"
     "VLC|flatpak|org.videolan.VLC|vlc|"
-    "Remmina|flatpak|org.remmina.Remmina|remmina|"
     "Steam|flatpak|com.valvesoftware.Steam|steam|"
     "Visual Studio Code|apt|code|code|classic"
     "Bitwarden|apt|bitwarden|bitwarden|"
