@@ -25,6 +25,8 @@ if [ "$EUID" -ne 0 ]; then
     erro "Execute este script como root (sudo)."
 fi
 
+iniciar_log "migrar_para_snap"
+
 trap_cancelamento
 trap_erro_inesperado
 
@@ -79,6 +81,8 @@ if [[ -t 0 ]] && ! confirmar "Confirmar a migração dos apps acima para Snap?";
     aviso "Operação cancelada pelo usuário."
     exit 0
 fi
+
+iniciar_log_bruto
 
 comando_existe snap || { info "Instalando snapd..."; apt install -y snapd; }
 

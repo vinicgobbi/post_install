@@ -49,6 +49,23 @@ automaticamente e **todos** os módulos rodam, com um aviso.
 Pressionar `Ctrl+C` a qualquer momento cancela com uma mensagem amigável em
 vez de um abort cru do bash.
 
+## Log em arquivo
+
+Tanto o `setup.sh` quanto o `migrar_para_snap.sh` gravam dois arquivos por
+execução em `logs/` (criada na raiz do repo, ignorada pelo git):
+
+- `<script>_<timestamp>.log` — só as mensagens `info`/`aviso`/`erro`/`sucesso`/
+  `passo`, com hora e nível, sem código de cor. Bom para uma leitura rápida
+  do que rodou.
+- `<script>_<timestamp>.raw.log` — transcrição bruta e completa de tudo que
+  passa pelo terminal durante a fase de execução dos módulos, incluindo a
+  saída crua de `apt`/`dnf`/`curl`/`flatpak`/`snap`. Bom para investigar o
+  motivo de uma falha.
+
+O log bruto só começa a ser gravado depois do menu interativo (na fase de
+execução), de propósito — redirecionar a saída do processo antes disso
+quebraria a detecção de terminal usada pelo menu de checklist.
+
 ## Estrutura do projeto
 
 ```

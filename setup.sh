@@ -20,6 +20,8 @@ if [ "$EUID" -ne 0 ]; then
     erro "Execute este script como root (sudo)."
 fi
 
+iniciar_log "setup"
+
 export DEBIAN_FRONTEND=noninteractive
 
 trap_cancelamento
@@ -66,6 +68,7 @@ if [[ -t 0 ]] && ! confirmar "Iniciar a configuração com os $TOTAL módulos ac
 fi
 
 # --- Execução ---
+iniciar_log_bruto
 EXECUTADOS=()
 for ((i = 0; i < TOTAL; i++)); do
     passo "$((i + 1))" "$TOTAL" "${SELECIONADOS_TITULOS[i]}"

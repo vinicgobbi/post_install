@@ -11,15 +11,66 @@ CINZA='\033[1;30m'
 NEGRITO='\033[1m'
 NC='\033[0m'
 
-info()    { echo -e "${AMARELO}[*] $1${NC}"; }
-sucesso() { echo -e "${VERDE}[+] $1${NC}"; }
-aviso()   { echo -e "${AZUL}[!] $1${NC}"; }
-erro()    { echo -e "${VERMELHO}[-] $1${NC}"; exit 1; }
+info()    { echo -e "${AMARELO}[*] $1${NC}"; log_linha "INFO" "$1"; }
+sucesso() { echo -e "${VERDE}[+] $1${NC}"; log_linha "OK" "$1"; }
+aviso()   { echo -e "${AZUL}[!] $1${NC}"; log_linha "AVISO" "$1"; }
+erro()    { echo -e "${VERMELHO}[-] $1${NC}"; log_linha "ERRO" "$1"; exit 1; }
 
 # Imprime "[atual/total] título" para marcar o progresso dos módulos selecionados.
 passo() {
     local atual="$1" total="$2" titulo="$3"
     echo -e "${NEGRITO}${AZUL}[${atual}/${total}]${NC} ${titulo}"
+    log_linha "PASSO" "[${atual}/${total}] ${titulo}"
+}
+
+# ==========================================
+# Log em arquivo
+# ==========================================
+# Cada execução grava dois arquivos em logs/, ao lado do script:
+#   <prefixo>_<timestamp>.log      — só as mensagens info/aviso/erro/sucesso/passo,
+#                                    com hora e nível, sem código de cor.
+#   <prefixo>_<timestamp>.raw.log  — transcrição bruta e completa de tudo que
+#                                    passa pelo terminal a partir de
+#                                    iniciar_log_bruto (inclui a saída de
+#                                    apt/dnf/curl/flatpak/snap etc.).
+LOG_FILE=""
+RAW_LOG_FILE=""
+
+# Chamado uma vez, bem no início do script (antes do menu interativo). Só
+# prepara o log "limpo" — o log bruto começa depois, em iniciar_log_bruto.
+iniciar_log() {
+    local prefixo="$1"
+    local log_dir="$SCRIPT_DIR/logs"
+    local timestamp
+    timestamp="$(date +%Y-%m-%d_%H%M%S)"
+
+    mkdir -p "$log_dir"
+    LOG_FILE="$log_dir/${prefixo}_${timestamp}.log"
+    RAW_LOG_FILE="$log_dir/${prefixo}_${timestamp}.raw.log"
+    : > "$LOG_FILE"
+
+    info "Log desta execução: $LOG_FILE"
+}
+
+# Grava uma linha com timestamp e nível em LOG_FILE. Chamada internamente
+# por info/sucesso/aviso/erro/passo — não precisa ser chamada à mão.
+log_linha() {
+    [[ -z "$LOG_FILE" ]] && return 0
+    printf '%s [%s] %s\n' "$(date '+%Y-%m-%d %H:%M:%S')" "$1" "$2" >> "$LOG_FILE"
+}
+
+# A partir daqui, TUDO que passar pelo terminal (stdout e stderr — incluindo
+# a saída crua de apt/dnf/curl/flatpak/snap) também é gravado em
+# RAW_LOG_FILE, além de continuar aparecendo na tela normalmente.
+#
+# Só é chamada depois do menu interativo (na fase de execução dos módulos),
+# de propósito: redirecionar o stdout do processo faz "[ -t 1 ]" passar a
+# reportar "não é terminal", o que quebraria a detecção de terminal do
+# menu_checklist se isso rodasse antes dele.
+iniciar_log_bruto() {
+    [[ -z "$RAW_LOG_FILE" ]] && return 0
+    exec > >(tee -a "$RAW_LOG_FILE") 2>&1
+    info "Saída completa (bruta) desta execução: $RAW_LOG_FILE"
 }
 
 banner() {
@@ -38,7 +89,7 @@ trap_cancelamento() {
 # Trap para erros não tratados (fora das chamadas explícitas a erro()),
 # mostrando o comando e a linha que falharam.
 trap_erro_inesperado() {
-    trap 'echo -e "${VERMELHO}[-] Falha inesperada (linha $LINENO): $BASH_COMMAND${NC}"' ERR
+    trap 'echo -e "${VERMELHO}[-] Falha inesperada (linha $LINENO): $BASH_COMMAND${NC}"; log_linha "ERRO" "Falha inesperada (linha $LINENO): $BASH_COMMAND"' ERR
 }
 
 # Pergunta s/N genérica. Retorna 0 (sim) ou 1 (não).
