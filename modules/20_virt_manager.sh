@@ -10,7 +10,10 @@ instalar_virt_manager() {
     if [[ "$PKG_MGR" == "dnf" ]]; then
         dnf install -y qemu-kvm libvirt virt-install virt-manager
     else
-        apt install -y qemu-kvm libvirt-daemon-system libvirt-clients bridge-utils virt-manager
+        # "qemu-kvm" virou pacote virtual (sem candidato de instalação) em
+        # versões recentes do Ubuntu; "qemu-system-x86" é o pacote real que
+        # o provê.
+        apt install -y qemu-system-x86 libvirt-daemon-system libvirt-clients bridge-utils virt-manager
     fi
 
     systemctl enable --now libvirtd
