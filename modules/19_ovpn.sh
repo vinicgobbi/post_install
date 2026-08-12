@@ -20,9 +20,8 @@ importar_ovpn() {
         fi
     fi
 
-    local user_home ovpn_dir
-    user_home=$(getent passwd "$USER_NAME" | cut -d: -f6)
-    ovpn_dir="$user_home/.ovpn"
+    local ovpn_dir
+    ovpn_dir="$SCRIPT_DIR/OVPN"
 
     if [[ ! -d "$ovpn_dir" ]] || ! compgen -G "$ovpn_dir/*.ovpn" > /dev/null; then
         aviso "Nenhum arquivo .ovpn encontrado em $ovpn_dir — pulando importação."
@@ -57,5 +56,5 @@ importar_ovpn() {
 }
 
 registrar_modulo "ovpn" "Importar perfis OpenVPN" \
-    "Instala o plugin OpenVPN do NetworkManager e importa os .ovpn de ~/.ovpn (aplicando DNS/domínio quando presentes no arquivo)" \
+    "Instala o plugin OpenVPN do NetworkManager e importa os .ovpn de ./OVPN (aplicando DNS/domínio quando presentes no arquivo)" \
     "importar_ovpn"

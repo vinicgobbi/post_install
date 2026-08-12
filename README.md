@@ -92,9 +92,9 @@ modules/
   14_ambiente_usuario.sh    # zsh, Oh My Zsh, fnm/Node, dotfiles, gsettings
   15_rust_tools.sh          # rustup + compilação de eza e topgrade via cargo
   16_claude_code.sh         # instala o Claude Code (CLI da Anthropic)
-  17_vscode_nautilus.sh     # extensão "Abrir com o VSCode" no menu do Nautilus
-  18_ovpn.sh                # instala plugin OpenVPN e importa perfis de ~/.ovpn
-  19_snap_apps.sh           # instala apps via Snap (só Ubuntu, ver seção abaixo)
+  17_snap_apps.sh           # instala apps via Snap (só Ubuntu, ver seção abaixo)
+  18_vscode_nautilus.sh     # extensão "Abrir com o VSCode" no menu do Nautilus
+  19_ovpn.sh                # instala plugin OpenVPN e importa perfis de ./OVPN
   20_virt_manager.sh        # QEMU/KVM, libvirt e virt-manager (módulo à parte — desmarque no menu se não quiser)
   21_limpeza.sh             # autoremove/clean do gerenciador de pacotes
 migrar_para_snap.sh          # script à parte: migra apps já instalados para Snap
@@ -135,7 +135,7 @@ módulos:
   o módulo `03_repositorios` e `04_pacotes_base` pulam essa parte com um
   aviso em vez de abortar o script inteiro.
 
-## Apps via Snap no Ubuntu (`modules/19_snap_apps.sh`)
+## Apps via Snap no Ubuntu (`modules/17_snap_apps.sh`)
 
 No Ubuntu (`$ID == "ubuntu"`, não em Mint/outros derivados), os seguintes
 apps são instalados via Snap em vez de Flatpak/apt, porque o snapd já vem
@@ -155,7 +155,7 @@ Ubuntu.
 Para isso, os módulos `07_flatpaks`, `08_flatpaks_jogos`, `12_bitwarden`,
 `04_pacotes_base` e `03_repositorios` pulam esses apps especificamente no
 Ubuntu (usando `filtrar_flatpaks_migrados_snap` de `lib/utils.sh`), e
-`19_snap_apps` instala a versão Snap de cada um. Em qualquer outra distro
+`17_snap_apps` instala a versão Snap de cada um. Em qualquer outra distro
 (Debian, Mint, Fedora, RHEL) nada muda — todos continuam instalados como
 antes (Flatpak/apt).
 
@@ -183,20 +183,21 @@ O fluxo:
    aproveitados automaticamente pelo Snap, então configurações/logins de
    apps migrados podem precisar ser refeitos.
 
-## Importação de perfis OpenVPN (`modules/18_ovpn.sh`)
+## Importação de perfis OpenVPN (`modules/19_ovpn.sh`)
 
-Antes de rodar o setup, copie os arquivos `.ovpn` para `~/.ovpn/` (no home do
-usuário escolhido no passo 2). O módulo:
+Antes de rodar o setup, copie os arquivos `.ovpn` para a pasta `OVPN/` do
+próprio projeto (veja `OVPN/README.md`). O módulo:
 
 1. Garante que o plugin OpenVPN do NetworkManager esteja instalado (instala
    se estiver faltando).
-2. Importa cada `.ovpn` de `~/.ovpn/*.ovpn` como uma conexão do
+2. Importa cada `.ovpn` de `OVPN/*.ovpn` como uma conexão do
    NetworkManager (reimportando do zero em reexecuções, para não duplicar).
 3. Se o arquivo declarar `dhcp-option DNS` e/ou `dhcp-option DOMAIN`
    (domínio de busca), aplica esses valores manualmente na conexão via
    `nmcli` — a importação automática nem sempre preenche isso.
 
-Se `~/.ovpn/` não existir ou estiver vazio, o módulo é pulado com um aviso.
+Se `OVPN/` estiver vazia, o módulo é pulado com um aviso. Os arquivos `.ovpn`
+não são versionados (só o README dentro da pasta) — veja `.gitignore`.
 
 ## Requisitos
 

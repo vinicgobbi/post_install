@@ -66,7 +66,7 @@ FLATPAKS_JOGOS=(
 #   - classic:      "classic" se o snap precisa de --classic, vazio se não
 #
 # Usada por lib/utils.sh (filtrar_flatpaks_migrados_snap), pelo módulo
-# modules/19_snap_apps.sh e pelo script migrar_para_snap.sh.
+# modules/17_snap_apps.sh e pelo script migrar_para_snap.sh.
 SNAP_MIGRACAO=(
     "Obsidian|flatpak|md.obsidian.Obsidian|obsidian|classic"
     "Postman|flatpak|com.getpostman.Postman|postman|"
