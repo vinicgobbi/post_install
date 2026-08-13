@@ -13,8 +13,7 @@ instalar_rust_tools() {
   curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain stable
   source \"\$HOME/.cargo/env\"
 
-  cargo install eza
-  cargo install topgrade
+  cargo install eza topgrade
 "
     sucesso "rustup, eza e topgrade instalados para $USER_NAME."
 }

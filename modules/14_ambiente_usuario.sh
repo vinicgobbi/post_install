@@ -10,24 +10,29 @@ configurar_usuario() {
   git-credential-manager configure
   git config --global credential.credentialStore secretservice
 
-  # Oh My Zsh
-  curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh | RUNZSH=no CHSH=no sh
+  # Oh My Zsh, FNM (download do binário, sem tocar no shell ainda) e clone dos
+  # dotfiles não dependem uns dos outros: rodam em paralelo em vez de em série.
+  ( curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh | RUNZSH=no CHSH=no sh ) &
+  pid_omz=\$!
+  ( curl -fsSL https://fnm.vercel.app/install | bash -s -- --skip-shell ) &
+  pid_fnm=\$!
+  ( rm -rf /tmp/dotfiles && git clone https://github.com/vinicgobbi/Dotfiles.git /tmp/dotfiles ) &
+  pid_dotfiles=\$!
+  wait \"\$pid_omz\" \"\$pid_fnm\" \"\$pid_dotfiles\"
 
-  # FNM (Fast Node Manager) e Node LTS
-  curl -fsSL https://fnm.vercel.app/install | bash -s -- --skip-shell
+  # Node LTS via FNM (agora que o binário já foi baixado acima)
   export PATH=\"\$HOME/.local/share/fnm:\$PATH\"
   eval \"\$(fnm env --shell zsh)\"
 
   fnm install --lts
   fnm default \$(fnm current)
 
-  # Injeta a inicialização do fnm explicitamente no .zshrc
+  # Injeta a inicialização do fnm explicitamente no .zshrc (precisa rodar
+  # depois do Oh My Zsh, que é quem cria/substitui o ~/.zshrc)
   echo 'export PATH=\"\$HOME/.local/share/fnm:\$PATH\"' >> ~/.zshrc
   echo 'eval \"\$(fnm env --shell zsh)\"' >> ~/.zshrc
 
-  # Repositório Dotfiles (remove clone anterior para permitir reexecução do script)
-  rm -rf /tmp/dotfiles
-  git clone https://github.com/vinicgobbi/Dotfiles.git /tmp/dotfiles
+  # Repositório Dotfiles já clonado acima em paralelo
   mkdir -p ~/.config/solaar ~/.local/share/fonts ~/.oh-my-zsh/custom
 
   cp -r /tmp/dotfiles/config/solaar/* ~/.config/solaar/ 2>/dev/null || true

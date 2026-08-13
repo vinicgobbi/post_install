@@ -57,25 +57,31 @@ candidatos_mirror_ubuntu() {
         | shuf -n 8
 }
 
-# Testa o tempo de download do Release de cada candidato e fica com o menor
-# tempo medido de verdade nesta rede, em vez de confiar em GeoIP de terceiros.
+# Testa o tempo de download do Release de cada candidato em paralelo (em vez
+# de um por um) e fica com o menor tempo medido de verdade nesta rede, em vez
+# de confiar em GeoIP de terceiros. Com timeout de 4s por candidato, testar
+# ~10 candidatos em série custaria até ~40s; em paralelo custa só o tempo do
+# candidato mais lento.
 # Ecoa a URL vencedora em stdout; não ecoa nada e retorna 1 se nenhuma responder.
 escolher_mirror_ubuntu_mais_rapido() {
-    local candidato tempo timeout_candidato=4
-    local melhor_url="" melhor_tempo=""
+    local candidato timeout_candidato=4
+    local tmpdir melhor_url="" i=0
+
+    tmpdir="$(mktemp -d)"
 
     while IFS= read -r candidato; do
         [[ -z "$candidato" ]] && continue
-
-        tempo="$(curl -fsSL -o /dev/null -s -w '%{time_total}' --max-time "$timeout_candidato" \
-            "${candidato%/}/dists/${BASE_CODENAME}/Release" 2>/dev/null)" || continue
-        [[ -z "$tempo" ]] && continue
-
-        if [[ -z "$melhor_tempo" ]] || awk -v a="$tempo" -v b="$melhor_tempo" 'BEGIN{exit !(a<b)}'; then
-            melhor_tempo="$tempo"
-            melhor_url="$candidato"
-        fi
+        i=$((i + 1))
+        (
+            tempo="$(curl -fsSL -o /dev/null -s -w '%{time_total}' --max-time "$timeout_candidato" \
+                "${candidato%/}/dists/${BASE_CODENAME}/Release" 2>/dev/null)" &&
+                [[ -n "$tempo" ]] && printf '%s %s\n' "$tempo" "$candidato" > "$tmpdir/$i"
+        ) &
     done < <(candidatos_mirror_ubuntu)
+    wait
+
+    melhor_url="$(cat "$tmpdir"/* 2>/dev/null | sort -n | head -n1 | awk '{print $2}')"
+    rm -rf "$tmpdir"
 
     [[ -z "$melhor_url" ]] && return 1
     echo "$melhor_url"
