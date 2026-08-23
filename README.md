@@ -89,7 +89,7 @@ modules/
   11_chrome_gcm.sh          # Google Chrome + Git Credential Manager
   12_bitwarden.sh           # Bitwarden desktop nativo
   13_temas_icones.sh        # tema adw-gtk3 e ícones Yaru
-  14_ambiente_usuario.sh    # zsh, Oh My Zsh, fnm/Node, dotfiles, gsettings
+  14_ambiente_usuario.sh    # fnm/Node, clona Dotfiles e roda o bootstrap.sh dele, gsettings
   15_rust_tools.sh          # rustup + compilação de eza e topgrade via cargo
   16_claude_code.sh         # instala o Claude Code (CLI da Anthropic)
   17_snap_apps.sh           # instala apps via Snap (só Ubuntu, ver seção abaixo)

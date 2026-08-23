@@ -10,15 +10,14 @@ configurar_usuario() {
   git-credential-manager configure
   git config --global credential.credentialStore secretservice
 
-  # Oh My Zsh, FNM (download do binário, sem tocar no shell ainda) e clone dos
-  # dotfiles não dependem uns dos outros: rodam em paralelo em vez de em série.
-  ( curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh | RUNZSH=no CHSH=no sh ) &
-  pid_omz=\$!
+  # FNM (download do binário, sem tocar no shell ainda) e o clone+bootstrap
+  # dos dotfiles (que cuida de Oh My Zsh, plugins, tema, fontes e config do
+  # Solaar) não dependem um do outro: rodam em paralelo em vez de em série.
   ( curl -fsSL https://fnm.vercel.app/install | bash -s -- --skip-shell ) &
   pid_fnm=\$!
-  ( rm -rf /tmp/dotfiles && git clone https://github.com/vinicgobbi/Dotfiles.git /tmp/dotfiles ) &
+  ( rm -rf /tmp/dotfiles && git clone https://github.com/vinicgobbi/Dotfiles.git /tmp/dotfiles && bash /tmp/dotfiles/bootstrap.sh ) &
   pid_dotfiles=\$!
-  wait \"\$pid_omz\" \"\$pid_fnm\" \"\$pid_dotfiles\"
+  wait \"\$pid_fnm\" \"\$pid_dotfiles\"
 
   # Node LTS via FNM (agora que o binário já foi baixado acima)
   export PATH=\"\$HOME/.local/share/fnm:\$PATH\"
@@ -32,16 +31,8 @@ configurar_usuario() {
   echo 'export PATH=\"\$HOME/.local/share/fnm:\$PATH\"' >> ~/.zshrc
   echo 'eval \"\$(fnm env --shell zsh)\"' >> ~/.zshrc
 
-  # Repositório Dotfiles já clonado acima em paralelo
-  mkdir -p ~/.config/solaar ~/.local/share/fonts ~/.oh-my-zsh/custom
-
-  cp -r /tmp/dotfiles/config/solaar/* ~/.config/solaar/ 2>/dev/null || true
-  cp -r /tmp/dotfiles/fonts/* ~/.local/share/fonts/ 2>/dev/null || true
-  cp -r /tmp/dotfiles/oh-my-zsh/custom/* ~/.oh-my-zsh/custom/ 2>/dev/null || true
-
-  # ZSH Theme e Fontes
-  sed -i 's/ZSH_THEME=\".*\"/ZSH_THEME=\"detail\"/' ~/.zshrc
-  fc-cache -f -v
+  # Repositório Dotfiles já clonado e aplicado (oh-my-zsh, plugins, tema,
+  # fontes, config do Solaar e papel de parede) pelo bootstrap.sh acima.
 
   # Diretório de Projetos (XDG e Bookmarks)
   if [[ \"\$LANG\" == pt_* ]]; then
