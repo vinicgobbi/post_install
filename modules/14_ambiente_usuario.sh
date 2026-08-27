@@ -3,7 +3,18 @@
 configurar_usuario() {
     info "Aplicando configurações locais para $USER_NAME..."
     usermod -aG docker "$USER_NAME"
-    chsh -s "$(command -v zsh)" "$USER_NAME"
+
+    # chsh só aceita contas presentes de fato em /etc/passwd; contas de
+    # domínio (AD/LDAP via sssd/winbind) resolvem normalmente por NSS
+    # (getent passwd enxerga, usermod funciona), mas não estão no arquivo, e
+    # o chsh recusa com "does not exist in /etc/passwd". Comparamos a
+    # resolução restrita à fonte "files" (local) contra a resolução padrão
+    # para distinguir os dois casos.
+    if getent -s files passwd "$USER_NAME" &>/dev/null; then
+        chsh -s "$(command -v zsh)" "$USER_NAME"
+    else
+        aviso "'$USER_NAME' é uma conta de domínio (AD/LDAP), não local: pulando 'chsh' (não dá para trocar o shell padrão por aqui nesse caso)."
+    fi
 
     executar_como_usuario "
   # Git Credential Manager
