@@ -9,9 +9,15 @@ instalar_apps_snap() {
     info "Instalando apps via Snap..."
     comando_existe snap || apt install -y snapd
 
-    local entrada titulo snap_nome classic flags
+    local entrada titulo snap_nome classic modulo_origem flags
     for entrada in "${SNAP_MIGRACAO[@]}"; do
-        IFS='|' read -r titulo _ _ snap_nome classic <<< "$entrada"
+        IFS='|' read -r titulo _ _ snap_nome classic modulo_origem <<< "$entrada"
+
+        if ! modulo_selecionado "$modulo_origem"; then
+            aviso "  Pulando $titulo via Snap: módulo '$modulo_origem' não foi selecionado."
+            continue
+        fi
+
         flags=()
         [[ "$classic" == "classic" ]] && flags=(--classic)
         info "  Snap: $titulo ($snap_nome)"

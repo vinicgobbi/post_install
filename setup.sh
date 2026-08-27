@@ -48,10 +48,12 @@ resolver_dependencias_modulos MOD_IDS MOD_DEPS MOD_TITLES MOD_SEL
 
 SELECIONADOS_FUNCS=()
 SELECIONADOS_TITULOS=()
+SELECIONADOS_IDS=()
 for ((i = 0; i < ${#MOD_IDS[@]}; i++)); do
     if [[ "${MOD_SEL[i]}" == "1" ]]; then
         SELECIONADOS_FUNCS+=("${MOD_FUNCS[i]}")
         SELECIONADOS_TITULOS+=("${MOD_TITLES[i]}")
+        SELECIONADOS_IDS+=("${MOD_IDS[i]}")
     fi
 done
 

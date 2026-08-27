@@ -59,6 +59,20 @@ resolver_dependencias_modulos() {
     done
 }
 
+# Verifica se o módulo (pelo id passado a registrar_modulo) foi escolhido
+# para rodar nesta execução. Depende de SELECIONADOS_IDS, montado pelo
+# setup.sh depois do menu_checklist + resolver_dependencias_modulos — usada
+# por módulos que instalam algo "no lugar" de outro módulo em condições
+# específicas (ex.: modules/17_snap_apps.sh só deve instalar o Steam via Snap
+# se o módulo "flatpaks_jogos" também tiver sido selecionado).
+modulo_selecionado() {
+    local id="$1" sel
+    for sel in "${SELECIONADOS_IDS[@]}"; do
+        [[ "$sel" == "$id" ]] && return 0
+    done
+    return 1
+}
+
 # Executa um bloco de shell como o usuário alvo (login shell, com $HOME correto).
 executar_como_usuario() {
     su - "$USER_NAME" -c "$1"

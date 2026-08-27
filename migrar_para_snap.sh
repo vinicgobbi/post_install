@@ -46,7 +46,7 @@ echo
 # --- Monta o checklist a partir de SNAP_MIGRACAO ---
 declare -a APP_IDS APP_TITULOS APP_DESCS APP_SEL
 for entrada in "${SNAP_MIGRACAO[@]}"; do
-    IFS='|' read -r titulo tipo valor snap_nome classic <<< "$entrada"
+    IFS='|' read -r titulo tipo valor snap_nome classic _ <<< "$entrada"
     APP_IDS+=("$snap_nome")
     APP_TITULOS+=("$titulo")
     if [[ "$tipo" == "flatpak" ]]; then
@@ -87,7 +87,7 @@ iniciar_log_bruto
 comando_existe snap || { info "Instalando snapd..."; apt install -y snapd; }
 
 for entrada in "${SELECIONADOS[@]}"; do
-    IFS='|' read -r titulo tipo valor snap_nome classic <<< "$entrada"
+    IFS='|' read -r titulo tipo valor snap_nome classic _ <<< "$entrada"
 
     info "Migrando $titulo..."
 
