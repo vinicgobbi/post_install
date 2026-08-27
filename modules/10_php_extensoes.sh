@@ -18,4 +18,4 @@ configurar_extensoes_php() {
 
 registrar_modulo "php_extensoes" "Extensões PHP (SQL Server)" \
     "Compila e habilita sqlsrv/pdo_sqlsrv via PECL" \
-    "configurar_extensoes_php"
+    "configurar_extensoes_php" "pacotes_base"

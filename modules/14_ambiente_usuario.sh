@@ -73,4 +73,4 @@ configurar_usuario() {
 
 registrar_modulo "ambiente_usuario" "Configurar ambiente do usuário" \
     "Zsh, Oh My Zsh, fnm/Node, dotfiles e ajustes visuais (GNOME ou Plasma, conforme detectado)" \
-    "configurar_usuario"
+    "configurar_usuario" "pacotes_base"

@@ -40,6 +40,12 @@ declare -a MOD_SEL
 menu_checklist "Escolha o que deseja executar (o script já vem com tudo marcado):" \
     MOD_IDS MOD_TITLES MOD_DESCS MOD_SEL
 
+# Alguns módulos dependem de outro ter rodado antes (ex.: "Extensões PHP"
+# precisa dos headers do driver ODBC que só "Instalar pacotes base" traz).
+# Se o usuário desmarcou uma dependência sem perceber, seleciona ela de volta
+# em vez de deixar o módulo dependente falhar no meio da execução.
+resolver_dependencias_modulos MOD_IDS MOD_DEPS MOD_TITLES MOD_SEL
+
 SELECIONADOS_FUNCS=()
 SELECIONADOS_TITULOS=()
 for ((i = 0; i < ${#MOD_IDS[@]}; i++)); do

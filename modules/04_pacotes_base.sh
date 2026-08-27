@@ -41,4 +41,4 @@ instalar_pacotes_base() {
 
 registrar_modulo "pacotes_base" "Instalar pacotes base" \
     "Docker, VSCode, PHP, Zsh e ferramentas de SQL Server" \
-    "instalar_pacotes_base"
+    "instalar_pacotes_base" "repositorios"
