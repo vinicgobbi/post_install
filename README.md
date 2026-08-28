@@ -51,16 +51,16 @@ vez de um abort cru do bash.
 
 ## Log em arquivo
 
-Tanto o `setup.sh` quanto o `migrar_para_snap.sh` gravam dois arquivos por
-execução em `logs/` (criada na raiz do repo, ignorada pelo git):
+O `setup.sh` grava dois arquivos por execução em `logs/` (criada na raiz do
+repo, ignorada pelo git):
 
 - `<script>_<timestamp>.log` — só as mensagens `info`/`aviso`/`erro`/`sucesso`/
   `passo`, com hora e nível, sem código de cor. Bom para uma leitura rápida
   do que rodou.
 - `<script>_<timestamp>.raw.log` — transcrição bruta e completa de tudo que
   passa pelo terminal durante a fase de execução dos módulos, incluindo a
-  saída crua de `apt`/`dnf`/`curl`/`flatpak`/`snap`. Bom para investigar o
-  motivo de uma falha.
+  saída crua de `apt`/`dnf`/`curl`/`flatpak`. Bom para investigar o motivo
+  de uma falha.
 
 O log bruto só começa a ser gravado depois do menu interativo (na fase de
 execução), de propósito — redirecionar a saída do processo antes disso
@@ -92,12 +92,10 @@ modules/
   14_ambiente_usuario.sh    # fnm/Node, clona Dotfiles e roda o bootstrap.sh dele, gsettings
   15_rust_tools.sh          # rustup + compilação de eza e topgrade via cargo
   16_claude_code.sh         # instala o Claude Code (CLI da Anthropic)
-  17_snap_apps.sh           # instala apps via Snap (só Ubuntu, ver seção abaixo)
   18_vscode_nautilus.sh     # extensão "Abrir com o VSCode" no menu do Nautilus
   19_ovpn.sh                # instala plugin OpenVPN e importa perfis de ./OVPN
   20_virt_manager.sh        # QEMU/KVM, libvirt e virt-manager (módulo à parte — desmarque no menu se não quiser)
   21_limpeza.sh             # autoremove/clean do gerenciador de pacotes
-migrar_para_snap.sh          # script à parte: migra apps já instalados para Snap
 ```
 
 Cada arquivo em `modules/` define uma função (mesmo nome de antes, ex.:
@@ -134,54 +132,6 @@ módulos:
   (msodbcsql/mssql-tools) para essa combinação de distro+versão; se for `0`,
   o módulo `03_repositorios` e `04_pacotes_base` pulam essa parte com um
   aviso em vez de abortar o script inteiro.
-
-## Apps via Snap no Ubuntu (`modules/17_snap_apps.sh`)
-
-No Ubuntu (`$ID == "ubuntu"`, não em Mint/outros derivados), os seguintes
-apps são instalados via Snap em vez de Flatpak/apt, porque o snapd já vem
-pronto de fábrica no Ubuntu: **Obsidian, Postman, DBeaver CE, LibreOffice,
-OnlyOffice, VLC, Steam, VSCode e Bitwarden**. Remmina fica de fora por
-escolha — continua via Flatpak em todas as distros. A lista com o
-mapeamento (id do Flatpak/pacote apt → pacote Snap, e se precisa de
-`--classic`) fica em `SNAP_MIGRACAO`, em `config.sh` — os confinamentos
-(`classic`/`strict`) foram conferidos na API oficial da Snap Store
-(`api.snapcraft.io`), não chutados.
-
-Heroic Games Launcher **não migrou**: não existe snap oficial dele (nem
-`heroic`, nem variações do nome) na Snap Store, então continua instalado via
-Flatpak (`com.heroicgameslauncher.hgl`) em todas as distros, inclusive
-Ubuntu.
-
-Para isso, os módulos `07_flatpaks`, `08_flatpaks_jogos`, `12_bitwarden`,
-`04_pacotes_base` e `03_repositorios` pulam esses apps especificamente no
-Ubuntu (usando `filtrar_flatpaks_migrados_snap` de `lib/utils.sh`), e
-`17_snap_apps` instala a versão Snap de cada um. Em qualquer outra distro
-(Debian, Mint, Fedora, RHEL) nada muda — todos continuam instalados como
-antes (Flatpak/apt).
-
-Se quiser adicionar/remover apps dessa migração, edite apenas o array
-`SNAP_MIGRACAO` em `config.sh`.
-
-## Migrando um sistema já instalado para Snap (`migrar_para_snap.sh`)
-
-Script separado do `setup.sh`, pensado para uma máquina que **já tem** essas
-apps instaladas em Flatpak/apt e você quer trocar para Snap sem reinstalar
-tudo do zero:
-
-```bash
-sudo ./migrar_para_snap.sh
-```
-
-O fluxo:
-
-1. Confirma que o sistema é Ubuntu (aborta em qualquer outra distro).
-2. Abre o mesmo menu de checklist do `setup.sh`, listando os apps de
-   `SNAP_MIGRACAO` — **você escolhe quais migrar, não precisa ser todos**.
-3. Para cada app escolhido: desinstala a versão atual (Flatpak ou apt/deb,
-   só se estiver de fato instalada) e instala a versão em Snap no lugar.
-4. Não apaga dados de apps Flatpak (`~/.var/app/<id>/`) — eles só não são
-   aproveitados automaticamente pelo Snap, então configurações/logins de
-   apps migrados podem precisar ser refeitos.
 
 ## Importação de perfis OpenVPN (`modules/19_ovpn.sh`)
 

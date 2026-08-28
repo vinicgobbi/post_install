@@ -59,20 +59,6 @@ resolver_dependencias_modulos() {
     done
 }
 
-# Verifica se o módulo (pelo id passado a registrar_modulo) foi escolhido
-# para rodar nesta execução. Depende de SELECIONADOS_IDS, montado pelo
-# setup.sh depois do menu_checklist + resolver_dependencias_modulos — usada
-# por módulos que instalam algo "no lugar" de outro módulo em condições
-# específicas (ex.: modules/17_snap_apps.sh só deve instalar o Steam via Snap
-# se o módulo "flatpaks_jogos" também tiver sido selecionado).
-modulo_selecionado() {
-    local id="$1" sel
-    for sel in "${SELECIONADOS_IDS[@]}"; do
-        [[ "$sel" == "$id" ]] && return 0
-    done
-    return 1
-}
-
 # Executa um bloco de shell como o usuário alvo (login shell, com $HOME correto).
 executar_como_usuario() {
     su - "$USER_NAME" -c "$1"
@@ -90,27 +76,4 @@ download_com_retry() {
         aviso "Falha ao baixar $url (tentativa $i/$tentativas)."
     done
     erro "Não foi possível baixar $url após $tentativas tentativas."
-}
-
-# Remove do array de Flatpaks (passado por referência, ex.: FLATPAKS,
-# FLATPAKS_JOGOS) os ids que foram migrados para Snap no Ubuntu — ver
-# SNAP_MIGRACAO em config.sh. Fora do Ubuntu ($ID != "ubuntu") não faz nada,
-# então a mesma lista de Flatpaks continua valendo normalmente.
-filtrar_flatpaks_migrados_snap() {
-    local -n _arr="$1"
-    [[ "$ID" != "ubuntu" ]] && return 0
-
-    local pkg entrada tipo valor migrado resultado=()
-    for pkg in "${_arr[@]}"; do
-        migrado=0
-        for entrada in "${SNAP_MIGRACAO[@]}"; do
-            IFS='|' read -r _ tipo valor _ _ <<< "$entrada"
-            if [[ "$tipo" == "flatpak" && "$valor" == "$pkg" ]]; then
-                migrado=1
-                break
-            fi
-        done
-        [[ "$migrado" -eq 0 ]] && resultado+=("$pkg")
-    done
-    _arr=("${resultado[@]}")
 }

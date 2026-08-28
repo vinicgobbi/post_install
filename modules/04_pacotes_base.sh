@@ -8,15 +8,9 @@ instalar_pacotes_base() {
             php-devel php-xml php-pear msodbcsql18 mssql-tools18 unixODBC-devel bat
     else
         local EXTRAS="code"
-        if [[ "$ID" == "ubuntu" ]]; then
-            # No Ubuntu o VSCode migra para Snap (módulo "Instalar apps via
-            # Snap"), então não entra na lista do apt aqui.
-            EXTRAS=""
-            # gnome-software só faz sentido em Ubuntu com GNOME; em Kubuntu
-            # (mesmo $ID) o Discover já cobre Flatpak/Snap, então evitamos
-            # puxar o GNOME Software.
-            [[ "$DESKTOP_ENV" != "kde" ]] && EXTRAS="gnome-software gnome-software-plugin-flatpak gnome-software-plugin-snap"
-        fi
+        # gnome-software só faz sentido em Ubuntu com GNOME; em Kubuntu (mesmo
+        # $ID) o Discover já cobre Flatpak/Snap, então evitamos puxar o GNOME Software.
+        [[ "$ID" == "ubuntu" && "$DESKTOP_ENV" != "kde" ]] && EXTRAS="code gnome-software gnome-software-plugin-flatpak gnome-software-plugin-snap"
 
         apt install -y flatpak zsh git curl jq \
             docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin php composer \

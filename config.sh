@@ -51,39 +51,3 @@ FLATPAKS_JOGOS=(
   com.heroicgameslauncher.hgl com.valvesoftware.Steam
   com.vysp3r.ProtonPlus org.prismlauncher.PrismLauncher
 )
-
-# ==========================================
-# Migração para Snap (só no Ubuntu, $ID == "ubuntu")
-# ==========================================
-# Apps que, especificamente no Ubuntu, instalamos via Snap em vez de
-# Flatpak/apt/deb. Fora do Ubuntu (Debian, Mint, etc.) essa lista é ignorada
-# e os módulos seguem instalando via Flatpak/apt normalmente.
-#
-# Formato de cada entrada, separado por "|":
-#   título | tipo_origem | valor_origem | pacote_snap | classic | modulo_origem
-#   - tipo_origem:   "flatpak" ou "apt" (como o app é instalado hoje)
-#   - valor_origem:  id do Flatpak, ou nome do pacote apt/dpkg
-#   - classic:       "classic" se o snap precisa de --classic, vazio se não
-#   - modulo_origem: id (registrar_modulo) do módulo que instalaria este app
-#                    se não estivéssemos no Ubuntu — usado por
-#                    modules/17_snap_apps.sh para só instalar via Snap o que
-#                    o usuário também teria selecionado por essa via (ex.:
-#                    sem o módulo "flatpaks_jogos" selecionado, não instala
-#                    o Steam via Snap).
-#
-# Usada por lib/utils.sh (filtrar_flatpaks_migrados_snap), pelo módulo
-# modules/17_snap_apps.sh e pelo script migrar_para_snap.sh.
-SNAP_MIGRACAO=(
-    "Obsidian|flatpak|md.obsidian.Obsidian|obsidian|classic|flatpaks"
-    "Postman|flatpak|com.getpostman.Postman|postman||flatpaks"
-    "DBeaver CE|flatpak|io.dbeaver.DBeaverCommunity|dbeaver-ce|classic|flatpaks"
-    "LibreOffice|flatpak|org.libreoffice.LibreOffice|libreoffice||flatpaks"
-    "OnlyOffice|flatpak|org.onlyoffice.desktopeditors|onlyoffice-desktopeditors||flatpaks"
-    "VLC|flatpak|org.videolan.VLC|vlc||flatpaks"
-    "Steam|flatpak|com.valvesoftware.Steam|steam||flatpaks_jogos"
-    "Visual Studio Code|apt|code|code|classic|pacotes_base"
-    "Bitwarden|apt|bitwarden|bitwarden||bitwarden"
-)
-# Heroic Games Launcher ficou de fora: não existe snap oficial (nem
-# "heroic", "heroic-games-launcher" ou variações) na Snap Store — continua
-# instalado via Flatpak (com.heroicgameslauncher.hgl) em todas as distros.
