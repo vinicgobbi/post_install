@@ -24,7 +24,7 @@ if [[ "$DESKTOP_ENV" == "kde" ]]; then
 
     # Já são nativos em Qt:
     com.mikrotik.WinBox com.obsproject.Studio org.qbittorrent.qBittorrent
-    org.telegram.desktop org.videolan.VLC
+    org.telegram.desktop org.videolan.VLC com.rtosta.zapzap
 
     # Equivalentes em Qt:
     org.kde.umbrello       # No lugar de Gaphor
@@ -44,6 +44,7 @@ else
     org.filezillaproject.Filezilla org.gaphor.Gaphor org.gnome.Boxes
     org.libreoffice.LibreOffice org.onlyoffice.desktopeditors org.qbittorrent.qBittorrent
     org.remmina.Remmina org.telegram.desktop org.videolan.VLC me.iepure.devtoolbox
+    com.rtosta.zapzap
   )
 fi
 
