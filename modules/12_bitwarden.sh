@@ -2,7 +2,9 @@
 
 instalar_bitwarden_nativo() {
     info "Instalando Bitwarden nativo (integração com navegador)..."
-    if [[ "$PKG_MGR" == "dnf" ]]; then
+    if [[ "$PKG_MGR" == "pacman" ]]; then
+        instalar_pacotes_aur bitwarden-bin
+    elif [[ "$PKG_MGR" == "dnf" ]]; then
         curl -sSL -o /tmp/bitwarden.rpm "https://vault.bitwarden.com/download/?app=desktop&platform=linux&variant=rpm"
         dnf install -y /tmp/bitwarden.rpm
     else

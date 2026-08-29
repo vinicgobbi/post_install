@@ -2,7 +2,21 @@
 
 instalar_chrome_e_gcm() {
     info "Instalando Git Credential Manager e Google Chrome..."
-    if [[ "$PKG_MGR" == "dnf" ]]; then
+    if [[ "$PKG_MGR" == "pacman" ]]; then
+        GCM_URL=$(curl -sL https://api.github.com/repos/git-ecosystem/git-credential-manager/releases/latest | jq -r '.assets[] | select(.name | endswith(".tar.gz") and contains("linux-x64") and (contains("symbols") | not)) | .browser_download_url' | head -n 1)
+
+        # GCM (tar.gz local) e Chrome (AUR/Chaotic-AUR, via yay) são
+        # independentes: baixa/instala os dois em paralelo.
+        curl -sSL -o /tmp/gcm.tar.gz "$GCM_URL" &
+        pid_gcm=$!
+        instalar_pacotes_aur google-chrome &
+        pid_chrome=$!
+        wait "$pid_gcm" "$pid_chrome"
+
+        mkdir -p /usr/local/gcm
+        tar -xzf /tmp/gcm.tar.gz -C /usr/local/gcm
+        ln -sf /usr/local/gcm/git-credential-manager /usr/local/bin/git-credential-manager
+    elif [[ "$PKG_MGR" == "dnf" ]]; then
         GCM_URL=$(curl -sL https://api.github.com/repos/git-ecosystem/git-credential-manager/releases/latest | jq -r '.assets[] | select(.name | endswith(".tar.gz") and contains("linux-x64") and (contains("symbols") | not)) | .browser_download_url' | head -n 1)
 
         # GCM (tar.gz local) e Chrome (rpm) são downloads independentes: baixa

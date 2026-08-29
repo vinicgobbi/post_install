@@ -9,12 +9,28 @@ otimizar_mirrors() {
         echo "fastestmirror=True" >> /etc/dnf/dnf.conf
         echo "max_parallel_downloads=10" >> /etc/dnf/dnf.conf
         sucesso "DNF otimizado: fastestmirror ativado e downloads paralelos definidos para 10."
+    elif [[ "$PKG_MGR" == "pacman" ]]; then
+        otimizar_mirrors_arch
     else
         if [[ "$ID" == "ubuntu" ]]; then
             otimizar_mirrors_ubuntu
         elif [[ "$ID" == "debian" ]]; then
             info "Debian detectado. O sistema já utiliza o redirecionador global por CDN (deb.debian.org) por padrão."
         fi
+    fi
+}
+
+# No Arch, o reflector já resolve isso de forma nativa (mede de verdade os
+# mirrors da lista oficial, sem precisar da lógica de scraping/GeoIP feita à
+# mão para o Ubuntu logo abaixo). --latest 20 limita a amostra aos mirrors
+# sincronizados mais recentemente antes de medir a velocidade de cada um.
+otimizar_mirrors_arch() {
+    comando_existe reflector || pacman -Sy --needed --noconfirm reflector
+
+    if reflector --latest 20 --protocol https --sort rate --save /etc/pacman.d/mirrorlist; then
+        sucesso "Mirrorlist do pacman otimizada com o reflector (20 mirrors HTTPS mais recentes, ordenados por velocidade)."
+    else
+        aviso "Falha ao rodar o reflector (sem rede?). Mantendo a mirrorlist atual."
     fi
 }
 

@@ -13,11 +13,35 @@ importação de perfis OpenVPN e a extensão do VSCode para o Nautilus.
 |----------|-----------------------------------------|-------------|
 | Fedora   | Fedora Linux                            | `dnf`       |
 | RHEL     | AlmaLinux e derivados (`ID_LIKE=rhel/centos`) | `dnf` |
+| Arch     | Arch Linux puro (`ID=arch`)              | `pacman`    |
 | Debian   | Ubuntu (bionic, focal, jammy, noble)     | `apt`       |
 | Debian   | Debian (bullseye, bookworm)              | `apt`       |
 
 Se a distribuição/versão não estiver nessa lista, o script para com uma
-mensagem clara em vez de continuar em um estado incerto.
+mensagem clara em vez de continuar em um estado incerto. No Arch isso
+inclui derivados como Manjaro/EndeavourOS/CachyOS: cada um diverge de um
+jeito diferente do Arch puro, então não são reconhecidos por `ID_LIKE`
+(diferente do que já é feito para RHEL/Ubuntu/Debian) — rodar lá é por
+conta e risco, sem suporte.
+
+### Arch Linux: Chaotic-AUR e yay
+
+Como o Arch (rolling release) não tem repositório empacotado próprio para
+VSCode, Google Chrome, Bitwarden nativo ou os pacotes MS SQL, o módulo
+`repositorios` configura o [Chaotic-AUR](https://aur.chaotic.cx/) — repositório
+binário com milhares de pacotes da AUR pré-compilados — e instala o `yay`
+(de lá, se disponível; senão compila da própria AUR). Os demais módulos usam
+o `yay` para esses pacotes: quando o Chaotic-AUR já tem o binário, instala
+direto; quando não tem, compila da AUR na hora (mais lento, mesmo resultado).
+
+Como o `makepkg` (usado por trás do `yay`) recusa rodar como root — e o
+`setup.sh` inteiro roda via `sudo` — o módulo `repositorios` libera
+temporariamente sudo sem senha **só para o binário do `pacman`**
+(`/etc/sudoers.d/99-post-install-aur`) para o usuário escolhido no início.
+Essa regra é removida automaticamente pelo módulo `limpeza` ao final da
+execução; se você rodar só um subconjunto de módulos e pular a limpeza, ela
+fica para trás até a próxima execução completa (ou até remover o arquivo
+manualmente).
 
 ## Como usar
 
@@ -74,18 +98,18 @@ config.sh                   # constantes compartilhadas (lista de Flatpaks)
 lib/
   ui.sh                     # cores, mensagens, menu interativo, prompts, resumo final
   os_detect.sh               # detecção de SO/versão/gerenciador de pacotes
-  utils.sh                  # helpers (comando_existe, executar_como_usuario, download_com_retry, registro de módulos)
+  utils.sh                  # helpers (comando_existe, executar_como_usuario, instalar_pacotes_aur, download_com_retry, registro de módulos)
 modules/
-  01_mirrors.sh             # otimização de mirrors do gerenciador de pacotes
+  01_mirrors.sh             # otimização de mirrors do gerenciador de pacotes (reflector no Arch)
   02_atualizacao.sh         # upgrade completo do sistema
-  03_repositorios.sh        # repositórios Docker, VSCode e Microsoft SQL
+  03_repositorios.sh        # repositórios Docker/VSCode/MS SQL, ou Chaotic-AUR + yay no Arch
   04_pacotes_base.sh        # Docker, VSCode, PHP, Zsh, ferramentas SQL Server
   05_solaar.sh              # regras UDEV para o receptor Logitech Unifying
   06_remover_libreoffice.sh # remove o LibreOffice nativo da distro
   07_flatpaks.sh            # instala a lista de apps Flatpak
   08_flatpaks_jogos.sh      # Steam, Heroic, ProtonPlus e PrismLauncher
   09_tailscale.sh           # Tailscale + Trayscale, define o usuário como operator
-  10_php_extensoes.sh       # extensões PHP sqlsrv/pdo_sqlsrv via PECL
+  10_php_extensoes.sh       # extensões PHP sqlsrv/pdo_sqlsrv (PECL, ou pacotes AUR no Arch)
   11_chrome_gcm.sh          # Google Chrome + Git Credential Manager
   12_bitwarden.sh           # Bitwarden desktop nativo
   13_temas_icones.sh        # tema adw-gtk3 e ícones Yaru
@@ -122,10 +146,12 @@ etapas, só criar ou apagar o arquivo em `modules/`.
 `detectar_sistema` define as seguintes variáveis globais, usadas pelos
 módulos:
 
-- `OS_FAMILY` — `fedora`, `rhel` ou `debian`
-- `PKG_MGR` — `dnf` ou `apt`
+- `OS_FAMILY` — `fedora`, `rhel`, `arch` ou `debian`
+- `PKG_MGR` — `dnf`, `pacman` ou `apt`
 - `RHEL_VERSION` — só para família `rhel` (ex.: `9`)
 - `ARCH`, `BASE_CODENAME`, `DISTRO_VERSION` — só para família `debian`
+  (não confundir com a família `arch`: Arch é rolling release, não tem
+  codinome/versão para rastrear)
 - `DOCKER_DISTRO` — `ubuntu` ou `debian`, usado para montar as URLs corretas
   do repositório do Docker
 - `MS_REPO_SUPPORTED` — `1` se a Microsoft publica repositório oficial

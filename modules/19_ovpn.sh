@@ -12,6 +12,9 @@ importar_ovpn() {
         else
             rpm -q NetworkManager-openvpn &>/dev/null || dnf install -y NetworkManager-openvpn NetworkManager-openvpn-gnome
         fi
+    elif [[ "$PKG_MGR" == "pacman" ]]; then
+        # No Arch o pacote oficial já cobre GNOME e Plasma junto, sem split.
+        pacman -Qq networkmanager-openvpn &>/dev/null || pacman -S --needed --noconfirm networkmanager-openvpn
     else
         if [[ "$DESKTOP_ENV" == "kde" ]]; then
             dpkg -s network-manager-openvpn &>/dev/null || apt install -y network-manager-openvpn

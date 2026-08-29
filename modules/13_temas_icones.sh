@@ -8,6 +8,14 @@ configurar_temas_e_icones() {
         return
     fi
 
+    if [[ "$PKG_MGR" == "pacman" ]]; then
+        info "Instalando adw-gtk-theme (oficial) e ícones Yaru (AUR/Chaotic-AUR)..."
+        pacman -S --needed --noconfirm adw-gtk-theme
+        instalar_pacotes_aur yaru-icon-theme
+        sucesso "Temas e ícones implantados no sistema."
+        return
+    fi
+
     info "Configurando temas e ícones globais em /usr/share..."
     mkdir -p /usr/share/themes /usr/share/icons
 

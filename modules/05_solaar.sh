@@ -20,12 +20,18 @@ instalar_solaar() {
     local pacote_disponivel=0
     if [[ "$PKG_MGR" == "dnf" ]]; then
         dnf info solaar &>/dev/null && pacote_disponivel=1
+    elif [[ "$PKG_MGR" == "pacman" ]]; then
+        pacman -Si solaar &>/dev/null && pacote_disponivel=1
     else
         apt-cache show solaar &>/dev/null && pacote_disponivel=1
     fi
 
     if [[ "$pacote_disponivel" == "1" ]]; then
-        "$PKG_MGR" install -y solaar
+        if [[ "$PKG_MGR" == "pacman" ]]; then
+            pacman -S --needed --noconfirm solaar
+        else
+            "$PKG_MGR" install -y solaar
+        fi
         sucesso "Solaar instalado via pacote nativo ($PKG_MGR)."
     else
         aviso "Pacote nativo do Solaar não encontrado; instalando via Flatpak."

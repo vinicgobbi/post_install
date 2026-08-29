@@ -29,6 +29,8 @@ EOF
 
     if [[ "$PKG_MGR" == "dnf" ]]; then
         dnf install -y nautilus-python python3-gobject
+    elif [[ "$PKG_MGR" == "pacman" ]]; then
+        pacman -S --needed --noconfirm nautilus-python python-gobject
     else
         apt install -y python3-nautilus python3-gi
     fi

@@ -64,6 +64,15 @@ executar_como_usuario() {
     su - "$USER_NAME" -c "$1"
 }
 
+# Instala pacotes via yay (só faz sentido na família "arch") como o usuário
+# alvo — o makepkg recusa rodar como root. Resolve tanto pacotes binários do
+# Chaotic-AUR (instala direto, sem compilar) quanto pacotes que só existem na
+# AUR de fato (compila). Depende do módulo "repositorios" ter liberado sudo
+# sem senha para o pacman nesse usuário antes (ver modules/03_repositorios.sh).
+instalar_pacotes_aur() {
+    executar_como_usuario "yay -S --needed --noconfirm $*"
+}
+
 # Baixa uma URL com algumas tentativas antes de desistir, para tolerar
 # instabilidade de rede em downloads de repositórios/pacotes externos.
 download_com_retry() {

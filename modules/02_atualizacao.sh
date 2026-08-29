@@ -4,6 +4,8 @@ atualizar_sistema() {
     info "Atualizando pacotes do sistema..."
     if [[ "$PKG_MGR" == "dnf" ]]; then
         dnf upgrade --refresh -y
+    elif [[ "$PKG_MGR" == "pacman" ]]; then
+        pacman -Syu --noconfirm
     else
         apt update && apt upgrade -y
     fi

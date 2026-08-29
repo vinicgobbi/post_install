@@ -3,8 +3,8 @@
 # Detecção de sistema operacional
 # ==========================================
 # Define, ao final de detectar_sistema:
-#   OS_FAMILY        fedora | rhel | debian
-#   PKG_MGR          dnf | apt
+#   OS_FAMILY        fedora | rhel | arch | debian
+#   PKG_MGR          dnf | pacman | apt
 #   ID / PRETTY_NAME vindos de /etc/os-release
 #   RHEL_VERSION     (só família rhel)
 #   ARCH             (só família debian) dpkg --print-architecture
@@ -12,6 +12,12 @@
 #   DISTRO_VERSION   (só família debian) versão numérica (22.04, 12, ...)
 #   DOCKER_DISTRO    (só família debian) "ubuntu" ou "debian", para montar URLs do repo Docker
 #   MS_REPO_SUPPORTED (só família debian) "1" se a Microsoft tem repo empacotado para essa combinação
+#
+# Família "arch" é restrita ao Arch puro (ID=arch) de propósito, na mesma
+# linha do resto desta função: derivados (Manjaro, EndeavourOS, CachyOS...)
+# não são cobertos, porque cada um diverge de formas diferentes (repos,
+# versões de pacote, AUR helper padrão) e "parecer" Arch não garante que os
+# módulos abaixo (Chaotic-AUR, yay) funcionem sem ajuste.
 
 detectar_sistema() {
     . /etc/os-release
@@ -24,6 +30,10 @@ detectar_sistema() {
         OS_FAMILY="rhel"
         PKG_MGR="dnf"
         RHEL_VERSION=$(echo "$VERSION_ID" | cut -d '.' -f 1)
+
+    elif [[ "$ID" == "arch" ]]; then
+        OS_FAMILY="arch"
+        PKG_MGR="pacman"
 
     elif [[ "$ID" == "ubuntu" || "$ID" == "debian" || "$ID_LIKE" == *"ubuntu"* || "$ID_LIKE" == *"debian"* ]]; then
         OS_FAMILY="debian"
@@ -81,6 +91,9 @@ mensagem_sistema_detectado() {
             ;;
         rhel)
             info "Sistema detectado: $PRETTY_NAME (Base: RHEL $RHEL_VERSION)"
+            ;;
+        arch)
+            info "Sistema detectado: $PRETTY_NAME (rolling release, pacman + Chaotic-AUR/yay)"
             ;;
         *)
             info "Sistema detectado: $PRETTY_NAME"

@@ -9,6 +9,8 @@ instalar_virt_manager() {
 
     if [[ "$PKG_MGR" == "dnf" ]]; then
         dnf install -y qemu-kvm libvirt virt-install virt-manager
+    elif [[ "$PKG_MGR" == "pacman" ]]; then
+        pacman -S --needed --noconfirm qemu-desktop libvirt virt-manager
     else
         # "qemu-kvm" virou pacote virtual (sem candidato de instalação) em
         # versões recentes do Ubuntu; "qemu-system-x86" é o pacote real que

@@ -5,6 +5,8 @@ instalar_rust_tools() {
 
     if [[ "$PKG_MGR" == "dnf" ]]; then
         dnf install -y gcc make
+    elif [[ "$PKG_MGR" == "pacman" ]]; then
+        pacman -S --needed --noconfirm base-devel
     else
         apt install -y build-essential
     fi
